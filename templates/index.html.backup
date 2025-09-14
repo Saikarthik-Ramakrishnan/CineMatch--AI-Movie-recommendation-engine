@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMatch - Working Version</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0a;
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hero {
+            text-align: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 16px;
+            margin-bottom: 2rem;
+        }
+        .context-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .context-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .context-card:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+        .chat-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .chat-input {
+            width: 70%;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-right: 1rem;
+        }
+        .chat-send {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        .movie-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .debug {
+            background: #333;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>🎬 CineMatch</h1>
+            <p>AI-Powered Movie Recommendations</p>
+        </div>
+
+        <div id="debug" class="debug">
+            <strong>Debug Info:</strong><br>
+            <span id="debugInfo">Loading...</span>
+        </div>
+
+        <h2>Choose Your Vibe</h2>
+        <div class="context-cards">
+            <div class="context-card" onclick="selectContext('friday-night')">
+                <div style="font-size: 2rem;">🎉</div>
+                <h3>Friday Night Fun</h3>
+                <p>Friends over, need something entertaining</p>
+            </div>
+            <div class="context-card" onclick="selectContext('cozy')">
+                <div style="font-size: 2rem;">🛋️</div>
+                <h3>Cozy & Chill</h3>
+                <p>Relaxing alone with comfort food</p>
+            </div>
+            <div class="context-card" onclick="selectContext('mind-bender')">
+                <div style="font-size: 2rem;">🧠</div>
+                <h3>Mind Bender</h3>
+                <p>Ready for something thought-provoking</p>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <h2>Chat with AI</h2>
+            <div id="chatMessages" style="min-height: 100px; margin-bottom: 1rem; padding: 1rem; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                <div><strong>AI:</strong> Hi! Tell me what kind of movie you're in the mood for!</div>
+            </div>
+            <input type="text" id="chatInput" class="chat-input" placeholder="I want something funny...">
+            <button onclick="sendMessage()" class="chat-send">Send</button>
+        </div>
+
+        <h2>Recommendations</h2>
+        <div id="moviesGrid" class="movies-grid">
+            <!-- Movies will appear here -->
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = '/api';
+        
+        // Debug function
+        function updateDebug(message) {
+            const debugInfo = document.getElementById('debugInfo');
+            const timestamp = new Date().toLocaleTimeString();
+            debugInfo.innerHTML += `<br>[${timestamp}] ${message}`;
+            console.log(`[${timestamp}] ${message}`);
+        }
+
+        // Test API on load
+        window.addEventListener('load', async function() {
+            updateDebug('Page loaded successfully');
+            updateDebug(`API URL: ${API_BASE_URL}`);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/movies`);
+                const data = await response.json();
+                updateDebug(`✅ API connection successful. Found ${data.movies?.length} movies`);
+            } catch (error) {
+                updateDebug(`❌ API connection failed: ${error.message}`);
+            }
+        });
+
+        // Context selection
+        async function selectContext(context) {
+            updateDebug(`🎯 Context selected: ${context}`);
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/recommendations/context/${context}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateDebug(`✅ Got ${data.recommendations.length} recommendations`);
+                    displayMovies(data.recommendations);
+                } else {
+                    updateDebug(`❌ API error: ${data.error}`);
+                }
+            } catch (error) {
+                updateDebug(`❌ Network error: ${error.message}`);
+            }
+        }
+
+        // Chat function
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            updateDebug(`💬 Sending message: ${message}`);
+            
+            // Add user message to chat
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+            
+            input.value = '';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/recommendations/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    chatMessages.innerHTML += `<div><strong>AI:</strong> ${data.ai_response}</div>`;
+                    updateDebug(`✅ Chat response received`);
+                    displayMovies(data.recommendations);
+                } else {
+                    updateDebug(`❌ Chat error: ${data.error}`);
+                }
+            } catch (error) {
+                updateDebug(`❌ Chat network error: ${error.message}`);
+            }
+        }
+
+        // Display movies
+        function displayMovies(movies) {
+            const grid = document.getElementById('moviesGrid');
+            
+            if (!movies || movies.length === 0) {
+                grid.innerHTML = '<p>No recommendations found</p>';
+                return;
+            }
+            
+            grid.innerHTML = movies.map(movie => `
+                <div class="movie-card">
+                    <h3>${movie.title}</h3>
+                    <p><strong>Genres:</strong> ${movie.genres}</p>
+                    <p><strong>Match:</strong> ${movie.match}</p>
+                    <p>${movie.explanation}</p>
+                </div>
+            `).join('');
+            
+            updateDebug(`🎬 Displayed ${movies.length} movies`);
+        }
+
+        // Enter key support for chat
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+<script>
+// Fix for context card clicks
+async function selectContext(context) {
+    console.log('Context selected:', context);
+    
+    try {
+        const response = await fetch(`/api/recommendations/context/${context}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            console.log('Got recommendations:', data.recommendations);
+            displayRecommendations(data.recommendations, 'homeRecommendations');
+        } else {
+            console.error('API Error:', data.error);
+        }
+    } catch (error) {
+        console.error('Network error:', error);
+    }
+}
+
+// Fix for displaying recommendations
+function displayRecommendations(movies, containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.error('Container not found:', containerId);
+        return;
+    }
+    
+    container.innerHTML = movies.map(movie => `
+        <div class="movie-card" style="background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 12px; margin: 1rem;">
+            <h3>${movie.title}</h3>
+            <p><strong>Genres:</strong> ${movie.genres}</p>
+            <p><strong>Match:</strong> ${movie.match}</p>
+            <p>${movie.explanation}</p>
+        </div>
+    `).join('');
+}
+
+console.log('✅ JavaScript fixes loaded');
+</script>
+</body>
+</html>

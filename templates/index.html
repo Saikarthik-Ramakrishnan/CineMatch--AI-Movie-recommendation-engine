@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMatch - AI-Powered Movie Recommendations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --secondary-gradient: linear-gradient(135deg, #f06292, #ff6b6b);
+            --accent-gradient: linear-gradient(135deg, #4ade80, #22c55e);
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #999;
+            --success: #4ade80;
+            --error: #ef4444;
+            --warning: #fbbf24;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        .nav {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 80%;
+        }
+        
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .profile-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Page Container */
+        .page-container {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            display: none;
+        }
+        
+        .page-container.active {
+            display: block;
+        }
+        
+        /* Page Header */
+        .page-header {
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .page-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Home Page Styles */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        /* Context Section */
+        .context-section {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .context-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .context-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .context-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(102, 126, 234, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .context-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(102, 126, 234, 0.7);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+        
+        .context-card:hover::before {
+            opacity: 1;
+        }
+        
+        .context-card.selected {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .context-card.selected::before {
+            background: linear-gradient(135deg, transparent, rgba(74, 222, 128, 0.2));
+            opacity: 1;
+        }
+        
+        .context-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .context-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+        }
+        
+        .context-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+        
+        /* Enhanced Chat Interface */
+        .chat-section {
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+        
+        .chat-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            min-height: 450px;
+            position: relative;
+        }
+        
+        .chat-messages {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            padding-right: 1rem;
+            scroll-behavior: smooth;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            animation: messageSlide 0.4s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+        
+        .message.user .message-avatar {
+            background: var(--secondary-gradient);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-text {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            display: inline-block;
+            max-width: 100%;
+            line-height: 1.5;
+        }
+        
+        .message.user .message-text {
+            background: rgba(240, 98, 146, 0.2);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            animation: typingBounce 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.7);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .chat-send {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 0 2rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+            height: 50px;
+        }
+        
+        .chat-send:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .chat-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-action:hover {
+            background: rgba(102, 126, 234, 0.3);
+            color: white;
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        /* Enhanced Movie Grid with Real Posters */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .movie-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            background: var(--card-bg);
+            height: 420px;
+            border: 2px solid var(--border-color);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.1);
+        }
+        
+        .movie-poster-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 2rem;
+        }
+        
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+            padding: 1.5rem;
+            height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .movie-year {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .movie-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: #ffd700;
+            font-weight: 600;
+        }
+        
+        .movie-genres {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .movie-match {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        .movie-explanation {
+            font-size: 0.8rem;
+            color: #ccc;
+            line-height: 1.4;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        /* Movie Actions */
+        .movie-actions {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .movie-card:hover .movie-actions {
+            opacity: 1;
+        }
+        
+        .movie-action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            font-size: 1rem;
+        }
+        
+        .movie-action-btn:hover {
+            background: var(--primary-gradient);
+            transform: scale(1.1);
+        }
+        
+        .movie-action-btn.added {
+            background: var(--success);
+        }
+        
+        /* Discover Page Styles */
+        .discover-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-select {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+        
+        .filter-select:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.7);
+        }
+        
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .search-bar:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.7);
+        }
+        
+        /* My List Styles */
+        .my-list-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            padding: 0 2rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* Groups Styles */
+        .groups-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .group-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .group-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .group-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .group-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--accent-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .group-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .group-members {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .group-activity {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .create-group-btn {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 2rem;
+        }
+        
+        .create-group-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Loading States */
+        .loading-card {
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        
+        .status-indicator {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            max-width: 300px;
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .status-indicator.show {
+            transform: translateX(0);
+        }
+        
+        .status-indicator.success {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+        }
+        
+        .status-indicator.error {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Movie Modal */
+        .movie-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 2rem;
+        }
+        
+        .movie-modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            position: relative;
+            height: 300px;
+            overflow: hidden;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .modal-backdrop {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: blur(3px);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .modal-movie-title {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        
+        .modal-movie-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .modal-movie-overview {
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .modal-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-btn.primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+        
+        .modal-btn.secondary {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .modal-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Debug Section */
+        .debug {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 2rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .debug::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .debug::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .success { color: var(--success); }
+        .error { color: var(--error); }
+        .info { color: #3b82f6; }
+        .warning { color: var(--warning); }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-title, .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1rem;
+            }
+            
+            .context-cards {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .chat-input-container {
+                flex-direction: column;
+            }
+            
+            .chat-send {
+                width: 100%;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-height: 95vh;
+            }
+            
+            .discover-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo" onclick="app.showPage('home')">
+                <span>🎬</span>
+                <span>CineMatch</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" onclick="app.showPage('home')">Home</a>
+                <a href="#" class="nav-link" onclick="app.showPage('mylist')">My List</a>
+                <a href="#" class="nav-link" onclick="app.showPage('discover')">Discover</a>
+                <a href="#" class="nav-link" onclick="app.showPage('groups')">Groups</a>
+                <button class="profile-btn">👤</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Status Indicator -->
+    <div id="statusIndicator" class="status-indicator">
+        <div id="statusMessage"></div>
+    </div>
+    
+    <!-- Movie Modal -->
+    <div id="movieModal" class="movie-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img id="modalBackdrop" class="modal-backdrop" src="" alt="">
+                <button class="modal-close" onclick="app.closeMovieModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 id="modalTitle" class="modal-movie-title"></h2>
+                <div class="modal-movie-meta">
+                    <div>📅 <span id="modalYear"></span></div>
+                    <div>⭐ <span id="modalRating"></span></div>
+                    <div>⏱️ <span id="modalRuntime"></span></div>
+                </div>
+                <div id="modalGenres" class="movie-genres"></div>
+                <p id="modalOverview" class="modal-movie-overview"></p>
+                <div class="modal-actions">
+                    <button class="modal-btn primary" onclick="app.addToMyList(app.currentModalMovie)">
+                        <span id="modalAddBtn">+ Add to My List</span>
+                    </button>
+                    <button class="modal-btn secondary" onclick="app.shareMovie(app.currentModalMovie)">
+                        📤 Share
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Home Page -->
+    <div id="home" class="page-container active">
+        <section class="hero">
+            <h1>What are you in the mood for?</h1>
+            <p>Tell us how you're feeling, and our AI will find the perfect movie for right now</p>
+        </section>
+        
+        <!-- Debug Section -->
+        <div id="debug" class="debug">
+            <strong>🔧 Debug Console:</strong><br>
+            <span id="debugInfo">Initializing CineMatch with TMDB integration...</span>
+        </div>
+        
+        <section class="context-section">
+            <h2 class="section-title">
+                <span>🎭</span>
+                <span>Choose Your Vibe</span>
+            </h2>
+            <div class="context-cards">
+                <div class="context-card" data-context="friday-night">
+                    <div class="context-icon">🎉</div>
+                    <h3 class="context-title">Friday Night Fun</h3>
+                    <p class="context-desc">Friends over, need something entertaining and social</p>
+                </div>
+                <div class="context-card" data-context="cozy">
+                    <div class="context-icon">🛋️</div>
+                    <h3 class="context-title">Cozy & Chill</h3>
+                    <p class="context-desc">Relaxing alone with comfort food and blankets</p>
+                </div>
+                <div class="context-card" data-context="mind-bender">
+                    <div class="context-icon">🧠</div>
+                    <h3 class="context-title">Mind Bender</h3>
+                    <p class="context-desc">Ready for something thought-provoking and complex</p>
+                </div>
+                <div class="context-card" data-context="date-night">
+                    <div class="context-icon">💑</div>
+                    <h3 class="context-title">Date Night</h3>
+                    <p class="context-desc">Something romantic but not cheesy or predictable</p>
+                </div>
+                <div class="context-card" data-context="family">
+                    <div class="context-icon">👨‍👩‍👧‍👦</div>
+                    <h3 class="context-title">Family Time</h3>
+                    <p class="context-desc">Kid-friendly but adults won't be bored to tears</p>
+                </div>
+                <div class="context-card" data-context="cant-sleep">
+                    <div class="context-icon">🌙</div>
+                    <h3 class="context-title">Can't Sleep</h3>
+                    <p class="context-desc">Something engaging but not too intense or loud</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Enhanced Chat Interface -->
+        <section class="chat-section">
+            <h2 class="section-title">
+                <span>💬</span>
+                <span>Chat with AI</span>
+            </h2>
+            <div class="chat-container">
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="app.sendQuickMessage('Something like Inception but funnier')">🧠 Smart comedy</div>
+                    <div class="quick-action" onclick="app.sendQuickMessage('A feel-good movie for rainy day')">☔ Feel-good</div>
+                    <div class="quick-action" onclick="app.sendQuickMessage('Action movie with great plot')">💥 Smart action</div>
+                    <div class="quick-action" onclick="app.sendQuickMessage('Underrated gems from the 2010s')">💎 Hidden gems</div>
+                    <div class="quick-action" onclick="app.sendQuickMessage('Movies like Parasite or Knives Out')">🎭 Modern classics</div>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Hi! I'm your AI movie companion. I can recommend movies with real posters and details! Tell me what you're in the mood for, who you're watching with, or any specific preferences you have.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput" 
+                        placeholder="I want something like Inception but funnier..."
+                        rows="1"
+                    ></textarea>
+                    <button class="chat-send" id="chatSend" onclick="app.sendChatMessage()">
+                        <span id="sendButtonText">Send</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Enhanced Recommendations with Real Movie Data -->
+        <section class="context-section">
+            <h2 class="section-title">
+                <span>✨</span>
+                <span>Recommended For You</span>
+                <span id="recommendationCount" style="font-size: 1rem; color: var(--text-secondary); margin-left: auto;"></span>
+            </h2>
+            <div class="movies-grid" id="homeRecommendations">
+                <div class="movie-card loading-card">
+                    <div class="movie-poster-placeholder">
+                        <span>🎬</span>
+                        <p>Select a vibe or chat to get recommendations!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- My List Page -->
+    <div id="mylist" class="page-container">
+        <section class="page-header">
+            <h1 class="page-title">My List</h1>
+            <p class="page-subtitle">Your personal collection of movies to watch</p>
+        </section>
+        
+        <section class="context-section">
+            <div class="my-list-stats">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalMovies">0</span>
+                    <div class="stat-label">Movies Saved</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalWatched">0</span>
+                    <div class="stat-label">Watched</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="totalUnwatched">0</span>
+                    <div class="stat-label">To Watch</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="avgRating">0.0</span>
+                    <div class="stat-label">Avg Rating</div>
+                </div>
+            </div>
+            
+            <div class="movies-grid" id="myListMovies">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🎬</div>
+                    <h3>Your list is empty</h3>
+                    <p>Start adding movies you want to watch!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Discover Page -->
+    <div id="discover" class="page-container">
+        <section class="page-header">
+            <h1 class="page-title">Discover Movies</h1>
+            <p class="page-subtitle">Explore trending films, search by genre, and find hidden gems</p>
+        </section>
+        
+        <section class="context-section">
+            <div class="discover-filters">
+                <input type="text" class="search-bar" id="searchInput" placeholder="Search for movies..." onkeypress="app.handleSearchKeyPress(event)">
+                <div class="filter-group">
+                    <label>Genre:</label>
+                    <select class="filter-select" id="genreFilter" onchange="app.filterMovies()">
+                        <option value="">All Genres</option>
+                        <option value="action">Action</option>
+                        <option value="comedy">Comedy</option>
+                        <option value="drama">Drama</option>
+                        <option value="horror">Horror</option>
+                        <option value="romance">Romance</option>
+                        <option value="sci-fi">Sci-Fi</option>
+                        <option value="thriller">Thriller</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Year:</label>
+                    <select class="filter-select" id="yearFilter" onchange="app.filterMovies()">
+                        <option value="">All Years</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2010s">2010s</option>
+                        <option value="2000s">2000s</option>
+                        <option value="90s">90s & Earlier</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Sort:</label>
+                    <select class="filter-select" id="sortFilter" onchange="app.filterMovies()">
+                        <option value="popularity">Popularity</option>
+                        <option value="rating">Rating</option>
+                        <option value="year">Year</option>
+                        <option value="title">Title</option>
+                    </select>
+                </div>
+            </div>
+            
+            <h2 class="section-title">
+                <span>🔥</span>
+                <span>Trending Now</span>
+            </h2>
+            <div class="movies-grid" id="trendingMovies">
+                <div class="movie-card loading-card">
+                    <p>Loading trending movies...</p>
+                </div>
+            </div>
+            
+            <h2 class="section-title">
+                <span>🎯</span>
+                <span>Search Results</span>
+                <span id="searchResultsCount" style="font-size: 1rem; color: var(--text-secondary); margin-left: auto;"></span>
+            </h2>
+            <div class="movies-grid" id="searchResults">
+                <div class="empty-state">
+                    <div class="empty-state-icon">🔍</div>
+                    <h3>Start exploring</h3>
+                    <p>Search for movies or browse by genre to discover new films!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Groups Page -->
+    <div id="groups" class="page-container">
+        <section class="page-header">
+            <h1 class="page-title">Movie Groups</h1>
+            <p class="page-subtitle">Connect with friends and discover movies together</p>
+        </section>
+        
+        <section class="context-section">
+            <button class="create-group-btn" onclick="app.createGroup()">
+                ➕ Create New Group
+            </button>
+            
+            <div class="groups-grid" id="movieGroups">
+                <!-- Demo Groups -->
+                <div class="group-card" onclick="app.openGroup('family-night')">
+                    <div class="group-header">
+                        <div class="group-avatar">👨‍👩‍👧‍👦</div>
+                        <div class="group-info">
+                            <h3>Family Movie Night</h3>
+                            <div class="group-members">5 members</div>
+                        </div>
+                    </div>
+                    <p>Weekly family movie selection. This week: animated adventures!</p>
+                    <div class="group-activity">
+                        <small>Last active: 2 hours ago</small><br>
+                        <small>Next movie: This Friday</small>
+                    </div>
+                </div>
+                
+                <div class="group-card" onclick="app.openGroup('horror-fans')">
+                    <div class="group-header">
+                        <div class="group-avatar">🎃</div>
+                        <div class="group-info">
+                            <h3>Horror Movie Enthusiasts</h3>
+                            <div class="group-members">12 members</div>
+                        </div>
+                    </div>
+                    <p>For those who love a good scare. Currently exploring classic horror films.</p>
+                    <div class="group-activity">
+                        <small>Last active: 1 day ago</small><br>
+                        <small>Currently watching: The Exorcist</small>
+                    </div>
+                </div>
+                
+                <div class="group-card" onclick="app.openGroup('film-buffs')">
+                    <div class="group-header">
+                        <div class="group-avatar">🎭</div>
+                        <div class="group-info">
+                            <h3>Film Buffs Society</h3>
+                            <div class="group-members">8 members</div>
+                        </div>
+                    </div>
+                    <p>Discussing cinematography, direction, and artistic merit of films.</p>
+                    <div class="group-activity">
+                        <small>Last active: 3 hours ago</small><br>
+                        <small>Discussion: Parasite analysis</small>
+                    </div>
+                </div>
+                
+                <div class="group-card" onclick="app.openGroup('date-night-picks')">
+                    <div class="group-header">
+                        <div class="group-avatar">💕</div>
+                        <div class="group-info">
+                            <h3>Date Night Picks</h3>
+                            <div class="group-members">6 members</div>
+                        </div>
+                    </div>
+                    <p>Couples sharing romantic movie recommendations and reviews.</p>
+                    <div class="group-activity">
+                        <small>Last active: 5 hours ago</small><br>
+                        <small>Upcoming: La La Land rewatch</small>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Enhanced Application State with My List, Discover & Groups
+        class CineMatchApp {
+            constructor() {
+                this.apiBaseUrl = '/api';
+                this.chatHistory = [];
+                this.currentContext = null;
+                this.currentPage = 'home';
+                this.myList = this.loadMyList();
+                this.isLoading = false;
+                this.retryCount = 0;
+                this.maxRetries = 3;
+                this.currentModalMovie = null;
+                this.searchTimeout = null;
+                
+                this.init();
+            }
+            
+            init() {
+                this.updateDebug('🚀 CineMatch with My List, Discover & Groups v4.0 Starting...');
+                this.setupEventListeners();
+                this.checkBackendConnection();
+                this.autoResize();
+                this.updateMyListStats();
+                this.loadTrendingMovies();
+            }
+            
+            // Page Navigation
+            showPage(pageId) {
+                // Hide all pages
+                document.querySelectorAll('.page-container').forEach(page => {
+                    page.classList.remove('active');
+                });
+                
+                // Remove active from nav links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                // Show selected page
+                document.getElementById(pageId).classList.add('active');
+                
+                // Update nav
+                event.target.classList.add('active');
+                
+                this.currentPage = pageId;
+                this.updateDebug(`📄 Switched to page: ${pageId}`);
+                
+                // Load page-specific content
+                if (pageId === 'mylist') {
+                    this.loadMyListPage();
+                } else if (pageId === 'discover') {
+                    this.loadDiscoverPage();
+                } else if (pageId === 'groups') {
+                    this.loadGroupsPage();
+                }
+            }
+            
+            // My List Functionality
+            loadMyList() {
+                const saved = localStorage.getItem('cinematch-mylist');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            saveMyList() {
+                localStorage.setItem('cinematch-mylist', JSON.stringify(this.myList));
+                this.updateMyListStats();
+            }
+            
+            addToMyList(movie) {
+                if (!movie) return;
+                
+                // Check if already in list
+                const exists = this.myList.find(m => m.id === movie.id || m.tmdb_id === movie.tmdb_id);
+                if (exists) {
+                    this.showStatus('Movie already in your list!', 'warning');
+                    return;
+                }
+                
+                // Add to list with metadata
+                const listItem = {
+                    ...movie,
+                    addedDate: new Date().toISOString(),
+                    watched: false
+                };
+                
+                this.myList.push(listItem);
+                this.saveMyList();
+                
+                this.showStatus(`Added "${movie.title}" to your list!`, 'success');
+                this.updateDebug(`➕ Added to My List: ${movie.title}`);
+                
+                // Update modal button if open
+                const modalBtn = document.getElementById('modalAddBtn');
+                if (modalBtn) {
+                    modalBtn.textContent = '✓ Added to List';
+                }
+            }
+            
+            removeFromMyList(movieId) {
+                const index = this.myList.findIndex(m => m.id === movieId || m.tmdb_id === movieId);
+                if (index > -1) {
+                    const movie = this.myList[index];
+                    this.myList.splice(index, 1);
+                    this.saveMyList();
+                    
+                    this.showStatus(`Removed "${movie.title}" from your list`, 'info');
+                    this.updateDebug(`➖ Removed from My List: ${movie.title}`);
+                    
+                    if (this.currentPage === 'mylist') {
+                        this.loadMyListPage();
+                    }
+                }
+            }
+            
+            toggleWatched(movieId) {
+                const movie = this.myList.find(m => m.id === movieId || m.tmdb_id === movieId);
+                if (movie) {
+                    movie.watched = !movie.watched;
+                    movie.watchedDate = movie.watched ? new Date().toISOString() : null;
+                    this.saveMyList();
+                    
+                    this.showStatus(`Marked "${movie.title}" as ${movie.watched ? 'watched' : 'unwatched'}`, 'success');
+                    
+                    if (this.currentPage === 'mylist') {
+                        this.loadMyListPage();
+                    }
+                }
+            }
+            
+            updateMyListStats() {
+                const total = this.myList.length;
+                const watched = this.myList.filter(m => m.watched).length;
+                const unwatched = total - watched;
+                const avgRating = total > 0 ? 
+                    (this.myList.reduce((sum, m) => sum + (parseFloat(m.rating) || 0), 0) / total).toFixed(1) : 
+                    '0.0';
+                
+                document.getElementById('totalMovies').textContent = total;
+                document.getElementById('totalWatched').textContent = watched;
+                document.getElementById('totalUnwatched').textContent = unwatched;
+                document.getElementById('avgRating').textContent = avgRating;
+            }
+            
+            loadMyListPage() {
+                const container = document.getElementById('myListMovies');
+                
+                if (this.myList.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎬</div>
+                            <h3>Your list is empty</h3>
+                            <p>Start adding movies you want to watch!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = this.myList.map(movie => `
+                    <div class="movie-card">
+                        <div class="movie-poster">
+                            ${movie.poster_url ? 
+                                `<img src="${movie.poster_url}" alt="${movie.title}" onerror="this.parentElement.innerHTML='<div class=\\'movie-poster-placeholder\\'><span>🎬</span><p>${movie.title}</p></div>'">` :
+                                `<div class="movie-poster-placeholder"><span>🎬</span><p>${movie.title}</p></div>`
+                            }
+                        </div>
+                        <div class="movie-actions">
+                            <button class="movie-action-btn" onclick="app.toggleWatched('${movie.id || movie.tmdb_id}')" title="${movie.watched ? 'Mark as unwatched' : 'Mark as watched'}">
+                                ${movie.watched ? '👁️' : '👀'}
+                            </button>
+                            <button class="movie-action-btn" onclick="app.removeFromMyList('${movie.id || movie.tmdb_id}')" title="Remove from list">
+                                🗑️
+                            </button>
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">${movie.title}</h3>
+                            <div class="movie-meta">
+                                <span class="movie-year">${movie.year || 'Unknown'}</span>
+                                <div class="movie-rating">
+                                    <span>⭐</span>
+                                    <span>${movie.rating || 'N/A'}</span>
+                                </div>
+                            </div>
+                            <p class="movie-genres">${movie.genres || 'Various Genres'}</p>
+                            <div class="movie-match" style="color: ${movie.watched ? '#4ade80' : '#fbbf24'}">
+                                <span>${movie.watched ? '✓' : '⏳'}</span>
+                                <span>${movie.watched ? 'Watched' : 'To Watch'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            // Discover Page Functionality
+            loadDiscoverPage() {
+                this.updateDebug('🔍 Loading Discover page...');
+                // Trending movies already loaded in init
+            }
+            
+            async loadTrendingMovies() {
+                try {
+                    this.updateDebug('🔥 Loading trending movies...');
+                    
+                    // For demo, we'll use context recommendations as "trending"
+                    const contexts = ['friday-night', 'mind-bender', 'cozy'];
+                    const randomContext = contexts[Math.floor(Math.random() * contexts.length)];
+                    
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/recommendations/context/${randomContext}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.displayMovies(data.recommendations, 'trendingMovies');
+                        this.updateDebug(`✅ Loaded ${data.recommendations.length} trending movies`);
+                    } else {
+                        throw new Error('Failed to load trending movies');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Error loading trending: ${error.message}`, 'error');
+                    document.getElementById('trendingMovies').innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⚠️</div>
+                            <h3>Unable to load trending</h3>
+                            <p>Please try again later</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            handleSearchKeyPress(event) {
+                if (event.key === 'Enter') {
+                    this.searchMovies();
+                } else {
+                    // Debounced search
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => this.searchMovies(), 500);
+                }
+            }
+            
+            async searchMovies() {
+                const query = document.getElementById('searchInput').value.trim();
+                const container = document.getElementById('searchResults');
+                const countEl = document.getElementById('searchResultsCount');
+                
+                if (!query) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🔍</div>
+                            <h3>Start exploring</h3>
+                            <p>Search for movies or browse by genre to discover new films!</p>
+                        </div>
+                    `;
+                    countEl.textContent = '';
+                    return;
+                }
+                
+                try {
+                    this.updateDebug(`🔍 Searching for: ${query}`);
+                    
+                    // Show loading
+                    container.innerHTML = `
+                        <div class="movie-card loading-card">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                            <p>Searching for "${query}"...</p>
+                        </div>
+                    `;
+                    
+                    // Use chat endpoint for search (it has keyword matching)
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/recommendations/chat`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message: query })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success && data.recommendations) {
+                        this.displayMovies(data.recommendations, 'searchResults');
+                        countEl.textContent = `${data.recommendations.length} results found`;
+                        this.updateDebug(`✅ Found ${data.recommendations.length} results for "${query}"`);
+                    } else {
+                        throw new Error('No results found');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Search error: ${error.message}`, 'error');
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">😕</div>
+                            <h3>No results found</h3>
+                            <p>Try a different search term or browse our recommendations!</p>
+                        </div>
+                    `;
+                    countEl.textContent = '';
+                }
+            }
+            
+            filterMovies() {
+                // This would filter the current results
+                // For now, we'll just show a message
+                this.showStatus('Filters coming soon! Use search for now.', 'info');
+            }
+            
+            // Groups Functionality
+            loadGroupsPage() {
+                this.updateDebug('👥 Loading Groups page...');
+                // Groups are currently static demo content
+            }
+            
+            createGroup() {
+                this.showStatus('Group creation coming soon! Stay tuned.', 'info');
+                this.updateDebug('➕ Group creation requested');
+            }
+            
+            openGroup(groupId) {
+                this.showStatus(`Opening group: ${groupId}`, 'info');
+                this.updateDebug(`👥 Opening group: ${groupId}`);
+            }
+            
+            shareMovie(movie) {
+                if (navigator.share) {
+                    navigator.share({
+                        title: movie.title,
+                        text: `Check out "${movie.title}" - ${movie.explanation}`,
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback
+                    const text = `Check out "${movie.title}" - ${movie.explanation}`;
+                    navigator.clipboard.writeText(text).then(() => {
+                        this.showStatus('Movie details copied to clipboard!', 'success');
+                    });
+                }
+            }
+            
+            // Display Functions
+            displayMovies(movies, containerId) {
+                const container = document.getElementById(containerId);
+                
+                if (!movies || movies.length === 0) {
+                    container.innerHTML = '<div class="movie-card loading-card"><div class="movie-poster-placeholder"><span>🎬</span><p>No movies found</p></div></div>';
+                    return;
+                }
+                
+                container.innerHTML = movies.map((movie, index) => {
+                    const isInMyList = this.myList.find(m => m.id === movie.id || m.tmdb_id === movie.tmdb_id);
+                    const posterContent = movie.poster_url ? 
+                        `<img src="${movie.poster_url}" alt="${movie.title}" onerror="this.parentElement.innerHTML='<div class=\\'movie-poster-placeholder\\'><span>🎬</span><p>${movie.title}</p></div>'">` :
+                        `<div class="movie-poster-placeholder"><span>🎬</span><p>${movie.title}</p></div>`;
+                    
+                    return `
+                        <div class="movie-card" style="animation-delay: ${index * 0.1}s" onclick="app.showMovieDetails(${JSON.stringify(movie).replace(/"/g, '&quot;')})">
+                            <div class="movie-poster">
+                                ${posterContent}
+                            </div>
+                            <div class="movie-actions">
+                                <button class="movie-action-btn ${isInMyList ? 'added' : ''}" 
+                                        onclick="event.stopPropagation(); app.addToMyList(${JSON.stringify(movie).replace(/"/g, '&quot;')})" 
+                                        title="${isInMyList ? 'Already in list' : 'Add to My List'}">
+                                    ${isInMyList ? '✓' : '+'}
+                                </button>
+                            </div>
+                            <div class="movie-info">
+                                <h3 class="movie-title">${movie.title}</h3>
+                                <div class="movie-meta">
+                                    <span class="movie-year">${movie.year || 'Unknown'}</span>
+                                    <div class="movie-rating">
+                                        <span>⭐</span>
+                                        <span>${movie.rating || 'N/A'}</span>
+                                    </div>
+                                </div>
+                                <p class="movie-genres">${movie.genres || 'Various Genres'}</p>
+                                <div class="movie-match">
+                                    <span>🎯</span>
+                                    <span>${movie.match || '95%'} match</span>
+                                </div>
+                                <p class="movie-explanation">${movie.explanation || 'Great recommendation!'}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            displayRecommendations(movies) {
+                this.displayMovies(movies, 'homeRecommendations');
+                
+                const countEl = document.getElementById('recommendationCount');
+                if (countEl) {
+                    countEl.textContent = movies.length > 0 ? `${movies.length} movies found` : '';
+                }
+            }
+            
+            showMovieDetails(movie) {
+                this.updateDebug(`🎬 Opening details for: ${movie.title}`);
+                this.currentModalMovie = movie;
+                
+                // Populate modal
+                document.getElementById('modalTitle').textContent = movie.title;
+                document.getElementById('modalYear').textContent = movie.year || 'Unknown';
+                document.getElementById('modalRating').textContent = movie.rating || 'N/A';
+                document.getElementById('modalRuntime').textContent = movie.runtime || 'Unknown';
+                document.getElementById('modalGenres').textContent = movie.genres || 'Various Genres';
+                document.getElementById('modalOverview').textContent = movie.overview || movie.explanation || 'No description available.';
+                
+                // Update add button
+                const isInMyList = this.myList.find(m => m.id === movie.id || m.tmdb_id === movie.tmdb_id);
+                const modalBtn = document.getElementById('modalAddBtn');
+                modalBtn.textContent = isInMyList ? '✓ Already in List' : '+ Add to My List';
+                
+                // Set backdrop image
+                const backdrop = document.getElementById('modalBackdrop');
+                if (movie.backdrop_url) {
+                    backdrop.src = movie.backdrop_url;
+                    backdrop.style.display = 'block';
+                } else {
+                    backdrop.style.display = 'none';
+                }
+                
+                // Show modal
+                document.getElementById('movieModal').classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            closeMovieModal() {
+                document.getElementById('movieModal').classList.remove('show');
+                document.body.style.overflow = 'auto';
+                this.currentModalMovie = null;
+            }
+            
+            // [Previous methods remain the same - setupEventListeners, selectContext, sendChatMessage, etc.]
+            setupEventListeners() {
+                // Context cards
+                document.querySelectorAll('.context-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const context = card.dataset.context;
+                        this.selectContext(context, card);
+                    });
+                });
+                
+                // Chat input
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.sendChatMessage();
+                        }
+                    });
+                    chatInput.addEventListener('input', this.autoResize);
+                }
+                
+                // Modal close on outside click
+                document.getElementById('movieModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'movieModal') {
+                        this.closeMovieModal();
+                    }
+                });
+                
+                this.updateDebug('✅ Event listeners setup complete');
+            }
+            
+            async selectContext(context, cardElement) {
+                this.updateDebug(`🎯 Context selected: ${context}`);
+                this.currentContext = context;
+                
+                // Visual feedback
+                document.querySelectorAll('.context-card').forEach(c => c.classList.remove('selected'));
+                cardElement.classList.add('selected');
+                
+                this.showStatus(`Selected: ${context.replace('-', ' ')}`, 'success');
+                this.showRecommendationLoading();
+                
+                try {
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/recommendations/context/${context}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.updateDebug(`✅ Got ${data.recommendations.length} TMDB recommendations for ${context}`, 'success');
+                        this.displayRecommendations(data.recommendations);
+                        this.showStatus(`Found ${data.recommendations.length} perfect matches!`, 'success');
+                    } else {
+                        throw new Error(data.error || 'API returned error');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Context API error: ${error.message}`, 'error');
+                    this.showStatus('Using backup recommendations', 'warning');
+                    this.generateFallbackRecommendations(context);
+                }
+            }
+            
+            async sendChatMessage(message = null) {
+                const input = document.getElementById('chatInput');
+                const finalMessage = message || input.value.trim();
+                
+                if (!finalMessage || this.isLoading) return;
+                
+                this.isLoading = true;
+                this.updateSendButton(true);
+                this.updateDebug(`💬 Sending: "${finalMessage}"`);
+                
+                // Add user message
+                this.addChatMessage(finalMessage, 'user');
+                
+                // Clear input
+                input.value = '';
+                this.autoResize();
+                
+                // Show typing indicator
+                this.showTypingIndicator();
+                
+                try {
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/recommendations/chat`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            message: finalMessage,
+                            context: this.currentContext,
+                            history: this.chatHistory.slice(-5)
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    this.removeTypingIndicator();
+                    
+                    if (data.success) {
+                        this.updateDebug(`✅ Chat response received`, 'success');
+                        this.addChatMessage(data.ai_response, 'ai');
+                        
+                        if (data.recommendations && data.recommendations.length > 0) {
+                            this.displayRecommendations(data.recommendations);
+                            this.showStatus(`Found ${data.recommendations.length} new recommendations!`, 'success');
+                        }
+                    } else {
+                        throw new Error(data.error || 'Chat API error');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Chat error: ${error.message}`, 'error');
+                    this.removeTypingIndicator();
+                    this.addChatMessage(
+                        'Sorry, I encountered an error. Please make sure the backend server is running and try again. In the meantime, try selecting a vibe card above!', 
+                        'ai'
+                    );
+                    this.showStatus('Chat temporarily unavailable', 'error');
+                } finally {
+                    this.isLoading = false;
+                    this.updateSendButton(false);
+                }
+            }
+            
+            sendQuickMessage(message) {
+                document.getElementById('chatInput').value = message;
+                this.sendChatMessage();
+            }
+            
+            updateSendButton(loading) {
+                const button = document.getElementById('chatSend');
+                const text = document.getElementById('sendButtonText');
+                
+                if (button && text) {
+                    button.disabled = loading;
+                    text.textContent = loading ? '...' : 'Send';
+                }
+            }
+            
+            addChatMessage(text, sender) {
+                const messagesContainer = document.getElementById('chatMessages');
+                if (!messagesContainer) return;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                    <div class="message-content">
+                        <div class="message-text">${this.formatMessage(text)}</div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Store in chat history
+                this.chatHistory.push({ sender, text });
+                
+                // Limit chat history
+                if (this.chatHistory.length > 20) {
+                    this.chatHistory = this.chatHistory.slice(-15);
+                }
+            }
+            
+            formatMessage(text) {
+                return text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n/g, '<br>');
+            }
+            
+            showTypingIndicator() {
+                const messagesContainer = document.getElementById('chatMessages');
+                if (!messagesContainer) return;
+                
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai typing-indicator-msg';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(typingDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            removeTypingIndicator() {
+                const typingIndicator = document.querySelector('.typing-indicator-msg');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            showRecommendationLoading() {
+                const container = document.getElementById('homeRecommendations');
+                if (!container) return;
+                
+                container.innerHTML = Array(6).fill('').map((_, i) => `
+                    <div class="movie-card loading-card" style="animation-delay: ${i * 0.1}s">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                        <p>Finding perfect matches...</p>
+                    </div>
+                `).join('');
+            }
+            
+            generateFallbackRecommendations(context) {
+                const fallbackData = {
+                    'friday-night': [
+                        { title: 'The Grand Budapest Hotel', genres: 'Comedy • Adventure', match: '95%', explanation: 'Whimsical and entertaining for groups', year: '2014', rating: '8.1' },
+                        { title: 'Knives Out', genres: 'Mystery • Comedy', match: '92%', explanation: 'Perfect whodunit for friends', year: '2019', rating: '7.9' },
+                        { title: 'Game Night', genres: 'Comedy • Crime', match: '89%', explanation: 'Hilarious ensemble comedy', year: '2018', rating: '6.9' }
+                    ],
+                    'cozy': [
+                        { title: 'Little Women', genres: 'Drama • Romance', match: '94%', explanation: 'Warm and comforting family story', year: '2019', rating: '7.8' },
+                        { title: 'The Holiday', genres: 'Romance • Comedy', match: '91%', explanation: 'Perfect comfort movie vibes', year: '2006', rating: '6.9' },
+                        { title: 'Julie & Julia', genres: 'Biography • Comedy', match: '88%', explanation: 'Food and life inspiration', year: '2009', rating: '7.0' }
+                    ],
+                    'mind-bender': [
+                        { title: 'Inception', genres: 'Sci-Fi • Thriller', match: '98%', explanation: 'Mind-bending masterpiece', year: '2010', rating: '8.8' },
+                        { title: 'The Prestige', genres: 'Mystery • Drama', match: '93%', explanation: 'Twisting psychological thriller', year: '2006', rating: '8.5' }
+                    ]
+                };
+                
+                const movies = fallbackData[context] || fallbackData['cozy'];
+                this.displayRecommendations(movies);
+                this.updateDebug(`🔄 Using fallback recommendations for ${context}`, 'warning');
+            }
+            
+            autoResize() {
+                const textarea = document.getElementById('chatInput');
+                if (textarea) {
+                    textarea.style.height = 'auto';
+                    textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+                }
+            }
+            
+            updateDebug(message, type = 'info') {
+                const debugInfo = document.getElementById('debugInfo');
+                if (!debugInfo) return;
+                
+                const timestamp = new Date().toLocaleTimeString();
+                const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : '🔄';
+                const newMessage = `<br><span class="${type}">[${timestamp}] ${icon} ${message}</span>`;
+                
+                debugInfo.innerHTML += newMessage;
+                debugInfo.scrollTop = debugInfo.scrollHeight;
+                
+                console.log(`[${timestamp}] ${message}`);
+                
+                // Auto-clean debug log
+                const lines = debugInfo.innerHTML.split('<br>');
+                if (lines.length > 25) {
+                    debugInfo.innerHTML = lines.slice(-20).join('<br>');
+                }
+            }
+            
+            showStatus(message, type = 'info', duration = 3000) {
+                const indicator = document.getElementById('statusIndicator');
+                const messageEl = document.getElementById('statusMessage');
+                
+                if (indicator && messageEl) {
+                    indicator.className = `status-indicator show ${type}`;
+                    messageEl.textContent = message;
+                    
+                    setTimeout(() => {
+                        indicator.classList.remove('show');
+                    }, duration);
+                }
+            }
+            
+            async fetchWithRetry(url, options = {}) {
+                for (let i = 0; i <= this.maxRetries; i++) {
+                    try {
+                        const response = await fetch(url, options);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        this.retryCount = 0;
+                        return response;
+                    } catch (error) {
+                        if (i === this.maxRetries) throw error;
+                        
+                        this.updateDebug(`🔄 Retry ${i + 1}/${this.maxRetries} for ${url}`, 'warning');
+                        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                    }
+                }
+            }
+            
+            async checkBackendConnection() {
+                try {
+                    this.updateDebug('🔍 Testing backend connection...');
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/movies`);
+                    const data = await response.json();
+                    
+                    if (data && data.success) {
+                        this.updateDebug(`✅ Backend connected! Found ${data.movies?.length || 0} movies`, 'success');
+                        this.showStatus('Backend connected successfully', 'success');
+                    } else {
+                        throw new Error(data.error || 'Unknown backend error');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Backend connection failed: ${error.message}`, 'error');
+                    this.showStatus('Backend offline - using demo mode', 'warning', 5000);
+                }
+            }
+        }
+        
+        // Initialize the enhanced application
+        let app;
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new CineMatchApp();
+        });
+    </script>
+</body>
+</html>
