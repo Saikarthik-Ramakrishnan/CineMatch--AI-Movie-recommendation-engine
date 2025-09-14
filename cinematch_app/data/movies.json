@@ -1,0 +1,1074 @@
+[
+  {
+    "id": 1,
+    "title": "Inception",
+    "genres": [
+      "Sci-Fi",
+      "Thriller",
+      "Action"
+    ],
+    "year": 2010,
+    "director": "Christopher Nolan",
+    "plot": "A thief who steals corporate secrets through dream-sharing technology",
+    "rating": 8.8,
+    "runtime": 148,
+    "mood_tags": [
+      "mind-bending",
+      "complex",
+      "visually-stunning"
+    ],
+    "context_tags": [
+      "date-night",
+      "mind-bender"
+    ],
+    "poster_url": "/static/images/inception.jpg"
+  },
+  {
+    "id": 2,
+    "title": "The Grand Budapest Hotel",
+    "genres": [
+      "Comedy",
+      "Drama"
+    ],
+    "year": 2014,
+    "director": "Wes Anderson",
+    "plot": "The adventures of Gustave H, legendary concierge at famous European hotel",
+    "rating": 8.1,
+    "runtime": 99,
+    "mood_tags": [
+      "whimsical",
+      "colorful",
+      "charming"
+    ],
+    "context_tags": [
+      "cozy",
+      "date-night"
+    ],
+    "poster_url": "/static/images/budapest.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Parasite",
+    "genres": [
+      "Thriller",
+      "Drama",
+      "Comedy"
+    ],
+    "year": 2019,
+    "director": "Bong Joon-ho",
+    "plot": "Greed and class discrimination threaten the newly formed symbiotic relationship",
+    "rating": 8.6,
+    "runtime": 132,
+    "mood_tags": [
+      "thought-provoking",
+      "intense",
+      "acclaimed"
+    ],
+    "context_tags": [
+      "mind-bender",
+      "serious"
+    ],
+    "poster_url": "/static/images/parasite.jpg"
+  },
+  {
+    "id": 4,
+    "title": "Paddington 2",
+    "genres": [
+      "Family",
+      "Comedy",
+      "Adventure"
+    ],
+    "year": 2017,
+    "director": "Paul King",
+    "plot": "Paddington, now settled with the Brown family, picks up a series of odd jobs",
+    "rating": 8.2,
+    "runtime": 103,
+    "mood_tags": [
+      "heartwarming",
+      "wholesome",
+      "feel-good"
+    ],
+    "context_tags": [
+      "family",
+      "cozy"
+    ],
+    "poster_url": "/static/images/paddington.jpg"
+  },
+  {
+    "id": 5,
+    "title": "Mad Max: Fury Road",
+    "genres": [
+      "Action",
+      "Adventure",
+      "Sci-Fi"
+    ],
+    "year": 2015,
+    "director": "George Miller",
+    "plot": "In a post-apocalyptic wasteland, Max teams up with Furiosa",
+    "rating": 8.1,
+    "runtime": 120,
+    "mood_tags": [
+      "intense",
+      "adrenaline",
+      "spectacular"
+    ],
+    "context_tags": [
+      "friday-night",
+      "action"
+    ],
+    "poster_url": "/static/images/madmax.jpg"
+  },
+  {
+    "id": 6,
+    "title": "Sample Movie 6",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2023,
+    "director": "Director 6",
+    "plot": "An engaging story about discovery",
+    "rating": 7.4,
+    "runtime": 98,
+    "mood_tags": [
+      "funny",
+      "intense"
+    ],
+    "context_tags": [
+      "cozy",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie6.jpg"
+  },
+  {
+    "id": 7,
+    "title": "Sample Movie 7",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2017,
+    "director": "Director 7",
+    "plot": "An engaging story about adventure",
+    "rating": 7.8,
+    "runtime": 146,
+    "mood_tags": [
+      "exciting",
+      "uplifting"
+    ],
+    "context_tags": [
+      "cozy",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie7.jpg"
+  },
+  {
+    "id": 8,
+    "title": "Sample Movie 8",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2011,
+    "director": "Director 8",
+    "plot": "An engaging story about mystery",
+    "rating": 7.4,
+    "runtime": 91,
+    "mood_tags": [
+      "uplifting",
+      "exciting"
+    ],
+    "context_tags": [
+      "family",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie8.jpg"
+  },
+  {
+    "id": 9,
+    "title": "Sample Movie 9",
+    "genres": [
+      "Action"
+    ],
+    "year": 2016,
+    "director": "Director 9",
+    "plot": "An engaging story about adventure",
+    "rating": 8.8,
+    "runtime": 166,
+    "mood_tags": [
+      "exciting",
+      "intense"
+    ],
+    "context_tags": [
+      "date-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie9.jpg"
+  },
+  {
+    "id": 10,
+    "title": "Sample Movie 10",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2011,
+    "director": "Director 10",
+    "plot": "An engaging story about mystery",
+    "rating": 7.8,
+    "runtime": 148,
+    "mood_tags": [
+      "emotional",
+      "exciting"
+    ],
+    "context_tags": [
+      "date-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie10.jpg"
+  },
+  {
+    "id": 11,
+    "title": "Sample Movie 11",
+    "genres": [
+      "Action"
+    ],
+    "year": 2015,
+    "director": "Director 11",
+    "plot": "An engaging story about mystery",
+    "rating": 7.4,
+    "runtime": 124,
+    "mood_tags": [
+      "uplifting",
+      "exciting"
+    ],
+    "context_tags": [
+      "family",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie11.jpg"
+  },
+  {
+    "id": 12,
+    "title": "Sample Movie 12",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2013,
+    "director": "Director 12",
+    "plot": "An engaging story about adventure",
+    "rating": 8.7,
+    "runtime": 177,
+    "mood_tags": [
+      "uplifting",
+      "emotional"
+    ],
+    "context_tags": [
+      "date-night",
+      "family"
+    ],
+    "poster_url": "/static/images/movie12.jpg"
+  },
+  {
+    "id": 13,
+    "title": "Sample Movie 13",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2011,
+    "director": "Director 13",
+    "plot": "An engaging story about love",
+    "rating": 8.2,
+    "runtime": 95,
+    "mood_tags": [
+      "funny",
+      "uplifting"
+    ],
+    "context_tags": [
+      "friday-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie13.jpg"
+  },
+  {
+    "id": 14,
+    "title": "Sample Movie 14",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2019,
+    "director": "Director 14",
+    "plot": "An engaging story about adventure",
+    "rating": 8.1,
+    "runtime": 134,
+    "mood_tags": [
+      "funny",
+      "uplifting"
+    ],
+    "context_tags": [
+      "date-night",
+      "family"
+    ],
+    "poster_url": "/static/images/movie14.jpg"
+  },
+  {
+    "id": 15,
+    "title": "Sample Movie 15",
+    "genres": [
+      "Action"
+    ],
+    "year": 2018,
+    "director": "Director 15",
+    "plot": "An engaging story about mystery",
+    "rating": 6.2,
+    "runtime": 97,
+    "mood_tags": [
+      "funny",
+      "uplifting"
+    ],
+    "context_tags": [
+      "family",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie15.jpg"
+  },
+  {
+    "id": 16,
+    "title": "Sample Movie 16",
+    "genres": [
+      "Action"
+    ],
+    "year": 2018,
+    "director": "Director 16",
+    "plot": "An engaging story about discovery",
+    "rating": 6.4,
+    "runtime": 90,
+    "mood_tags": [
+      "uplifting",
+      "intense"
+    ],
+    "context_tags": [
+      "family",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie16.jpg"
+  },
+  {
+    "id": 17,
+    "title": "Sample Movie 17",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2019,
+    "director": "Director 17",
+    "plot": "An engaging story about discovery",
+    "rating": 6.6,
+    "runtime": 122,
+    "mood_tags": [
+      "emotional",
+      "funny"
+    ],
+    "context_tags": [
+      "cozy",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie17.jpg"
+  },
+  {
+    "id": 18,
+    "title": "Sample Movie 18",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2012,
+    "director": "Director 18",
+    "plot": "An engaging story about mystery",
+    "rating": 6.9,
+    "runtime": 108,
+    "mood_tags": [
+      "uplifting",
+      "exciting"
+    ],
+    "context_tags": [
+      "friday-night",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie18.jpg"
+  },
+  {
+    "id": 19,
+    "title": "Sample Movie 19",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2010,
+    "director": "Director 19",
+    "plot": "An engaging story about love",
+    "rating": 6.3,
+    "runtime": 130,
+    "mood_tags": [
+      "emotional",
+      "funny"
+    ],
+    "context_tags": [
+      "cozy",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie19.jpg"
+  },
+  {
+    "id": 20,
+    "title": "Sample Movie 20",
+    "genres": [
+      "Action"
+    ],
+    "year": 2019,
+    "director": "Director 20",
+    "plot": "An engaging story about love",
+    "rating": 6.1,
+    "runtime": 138,
+    "mood_tags": [
+      "uplifting",
+      "emotional"
+    ],
+    "context_tags": [
+      "date-night",
+      "family"
+    ],
+    "poster_url": "/static/images/movie20.jpg"
+  },
+  {
+    "id": 21,
+    "title": "Sample Movie 21",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2013,
+    "director": "Director 21",
+    "plot": "An engaging story about mystery",
+    "rating": 6.2,
+    "runtime": 117,
+    "mood_tags": [
+      "emotional",
+      "exciting"
+    ],
+    "context_tags": [
+      "family",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie21.jpg"
+  },
+  {
+    "id": 22,
+    "title": "Sample Movie 22",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2022,
+    "director": "Director 22",
+    "plot": "An engaging story about discovery",
+    "rating": 8.6,
+    "runtime": 174,
+    "mood_tags": [
+      "exciting",
+      "intense"
+    ],
+    "context_tags": [
+      "date-night",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie22.jpg"
+  },
+  {
+    "id": 23,
+    "title": "Sample Movie 23",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2011,
+    "director": "Director 23",
+    "plot": "An engaging story about discovery",
+    "rating": 8.4,
+    "runtime": 100,
+    "mood_tags": [
+      "funny",
+      "uplifting"
+    ],
+    "context_tags": [
+      "cozy",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie23.jpg"
+  },
+  {
+    "id": 24,
+    "title": "Sample Movie 24",
+    "genres": [
+      "Action"
+    ],
+    "year": 2017,
+    "director": "Director 24",
+    "plot": "An engaging story about discovery",
+    "rating": 8.5,
+    "runtime": 120,
+    "mood_tags": [
+      "exciting",
+      "emotional"
+    ],
+    "context_tags": [
+      "date-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie24.jpg"
+  },
+  {
+    "id": 25,
+    "title": "Sample Movie 25",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2022,
+    "director": "Director 25",
+    "plot": "An engaging story about love",
+    "rating": 8.5,
+    "runtime": 163,
+    "mood_tags": [
+      "funny",
+      "uplifting"
+    ],
+    "context_tags": [
+      "cozy",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie25.jpg"
+  },
+  {
+    "id": 26,
+    "title": "Sample Movie 26",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2019,
+    "director": "Director 26",
+    "plot": "An engaging story about adventure",
+    "rating": 6.9,
+    "runtime": 96,
+    "mood_tags": [
+      "intense",
+      "funny"
+    ],
+    "context_tags": [
+      "friday-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie26.jpg"
+  },
+  {
+    "id": 27,
+    "title": "Sample Movie 27",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2020,
+    "director": "Director 27",
+    "plot": "An engaging story about adventure",
+    "rating": 7.1,
+    "runtime": 165,
+    "mood_tags": [
+      "intense",
+      "funny"
+    ],
+    "context_tags": [
+      "family",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie27.jpg"
+  },
+  {
+    "id": 28,
+    "title": "Sample Movie 28",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2013,
+    "director": "Director 28",
+    "plot": "An engaging story about love",
+    "rating": 8.1,
+    "runtime": 119,
+    "mood_tags": [
+      "uplifting",
+      "funny"
+    ],
+    "context_tags": [
+      "cozy",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie28.jpg"
+  },
+  {
+    "id": 29,
+    "title": "Sample Movie 29",
+    "genres": [
+      "Action"
+    ],
+    "year": 2015,
+    "director": "Director 29",
+    "plot": "An engaging story about discovery",
+    "rating": 8.8,
+    "runtime": 179,
+    "mood_tags": [
+      "funny",
+      "emotional"
+    ],
+    "context_tags": [
+      "date-night",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie29.jpg"
+  },
+  {
+    "id": 30,
+    "title": "Sample Movie 30",
+    "genres": [
+      "Action"
+    ],
+    "year": 2017,
+    "director": "Director 30",
+    "plot": "An engaging story about discovery",
+    "rating": 8.2,
+    "runtime": 167,
+    "mood_tags": [
+      "emotional",
+      "intense"
+    ],
+    "context_tags": [
+      "cozy",
+      "family"
+    ],
+    "poster_url": "/static/images/movie30.jpg"
+  },
+  {
+    "id": 31,
+    "title": "Sample Movie 31",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2023,
+    "director": "Director 31",
+    "plot": "An engaging story about love",
+    "rating": 6.9,
+    "runtime": 132,
+    "mood_tags": [
+      "exciting",
+      "uplifting"
+    ],
+    "context_tags": [
+      "family",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie31.jpg"
+  },
+  {
+    "id": 32,
+    "title": "Sample Movie 32",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2019,
+    "director": "Director 32",
+    "plot": "An engaging story about love",
+    "rating": 7.3,
+    "runtime": 139,
+    "mood_tags": [
+      "exciting",
+      "uplifting"
+    ],
+    "context_tags": [
+      "family",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie32.jpg"
+  },
+  {
+    "id": 33,
+    "title": "Sample Movie 33",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2023,
+    "director": "Director 33",
+    "plot": "An engaging story about mystery",
+    "rating": 7.0,
+    "runtime": 176,
+    "mood_tags": [
+      "funny",
+      "emotional"
+    ],
+    "context_tags": [
+      "cozy",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie33.jpg"
+  },
+  {
+    "id": 34,
+    "title": "Sample Movie 34",
+    "genres": [
+      "Action"
+    ],
+    "year": 2012,
+    "director": "Director 34",
+    "plot": "An engaging story about love",
+    "rating": 8.2,
+    "runtime": 139,
+    "mood_tags": [
+      "intense",
+      "funny"
+    ],
+    "context_tags": [
+      "cozy",
+      "family"
+    ],
+    "poster_url": "/static/images/movie34.jpg"
+  },
+  {
+    "id": 35,
+    "title": "Sample Movie 35",
+    "genres": [
+      "Action"
+    ],
+    "year": 2023,
+    "director": "Director 35",
+    "plot": "An engaging story about mystery",
+    "rating": 8.2,
+    "runtime": 111,
+    "mood_tags": [
+      "emotional",
+      "exciting"
+    ],
+    "context_tags": [
+      "date-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie35.jpg"
+  },
+  {
+    "id": 36,
+    "title": "Sample Movie 36",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2017,
+    "director": "Director 36",
+    "plot": "An engaging story about mystery",
+    "rating": 7.6,
+    "runtime": 148,
+    "mood_tags": [
+      "uplifting",
+      "emotional"
+    ],
+    "context_tags": [
+      "family",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie36.jpg"
+  },
+  {
+    "id": 37,
+    "title": "Sample Movie 37",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2013,
+    "director": "Director 37",
+    "plot": "An engaging story about adventure",
+    "rating": 8.1,
+    "runtime": 162,
+    "mood_tags": [
+      "exciting",
+      "uplifting"
+    ],
+    "context_tags": [
+      "date-night",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie37.jpg"
+  },
+  {
+    "id": 38,
+    "title": "Sample Movie 38",
+    "genres": [
+      "Action"
+    ],
+    "year": 2022,
+    "director": "Director 38",
+    "plot": "An engaging story about love",
+    "rating": 7.4,
+    "runtime": 176,
+    "mood_tags": [
+      "exciting",
+      "funny"
+    ],
+    "context_tags": [
+      "date-night",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie38.jpg"
+  },
+  {
+    "id": 39,
+    "title": "Sample Movie 39",
+    "genres": [
+      "Action"
+    ],
+    "year": 2022,
+    "director": "Director 39",
+    "plot": "An engaging story about love",
+    "rating": 8.2,
+    "runtime": 156,
+    "mood_tags": [
+      "funny",
+      "emotional"
+    ],
+    "context_tags": [
+      "cozy",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie39.jpg"
+  },
+  {
+    "id": 40,
+    "title": "Sample Movie 40",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2022,
+    "director": "Director 40",
+    "plot": "An engaging story about adventure",
+    "rating": 7.1,
+    "runtime": 134,
+    "mood_tags": [
+      "funny",
+      "uplifting"
+    ],
+    "context_tags": [
+      "date-night",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie40.jpg"
+  },
+  {
+    "id": 41,
+    "title": "Sample Movie 41",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2017,
+    "director": "Director 41",
+    "plot": "An engaging story about adventure",
+    "rating": 8.8,
+    "runtime": 152,
+    "mood_tags": [
+      "exciting",
+      "emotional"
+    ],
+    "context_tags": [
+      "date-night",
+      "family"
+    ],
+    "poster_url": "/static/images/movie41.jpg"
+  },
+  {
+    "id": 42,
+    "title": "Sample Movie 42",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2010,
+    "director": "Director 42",
+    "plot": "An engaging story about adventure",
+    "rating": 8.5,
+    "runtime": 173,
+    "mood_tags": [
+      "emotional",
+      "intense"
+    ],
+    "context_tags": [
+      "family",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie42.jpg"
+  },
+  {
+    "id": 43,
+    "title": "Sample Movie 43",
+    "genres": [
+      "Action"
+    ],
+    "year": 2010,
+    "director": "Director 43",
+    "plot": "An engaging story about discovery",
+    "rating": 7.7,
+    "runtime": 159,
+    "mood_tags": [
+      "emotional",
+      "funny"
+    ],
+    "context_tags": [
+      "cozy",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie43.jpg"
+  },
+  {
+    "id": 44,
+    "title": "Sample Movie 44",
+    "genres": [
+      "Action"
+    ],
+    "year": 2021,
+    "director": "Director 44",
+    "plot": "An engaging story about love",
+    "rating": 8.1,
+    "runtime": 93,
+    "mood_tags": [
+      "funny",
+      "emotional"
+    ],
+    "context_tags": [
+      "friday-night",
+      "date-night"
+    ],
+    "poster_url": "/static/images/movie44.jpg"
+  },
+  {
+    "id": 45,
+    "title": "Sample Movie 45",
+    "genres": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "year": 2019,
+    "director": "Director 45",
+    "plot": "An engaging story about love",
+    "rating": 8.4,
+    "runtime": 158,
+    "mood_tags": [
+      "funny",
+      "exciting"
+    ],
+    "context_tags": [
+      "family",
+      "friday-night"
+    ],
+    "poster_url": "/static/images/movie45.jpg"
+  },
+  {
+    "id": 46,
+    "title": "Sample Movie 46",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2018,
+    "director": "Director 46",
+    "plot": "An engaging story about mystery",
+    "rating": 7.9,
+    "runtime": 113,
+    "mood_tags": [
+      "uplifting",
+      "exciting"
+    ],
+    "context_tags": [
+      "family",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie46.jpg"
+  },
+  {
+    "id": 47,
+    "title": "Sample Movie 47",
+    "genres": [
+      "Action"
+    ],
+    "year": 2013,
+    "director": "Director 47",
+    "plot": "An engaging story about mystery",
+    "rating": 8.5,
+    "runtime": 100,
+    "mood_tags": [
+      "funny",
+      "exciting"
+    ],
+    "context_tags": [
+      "family",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie47.jpg"
+  },
+  {
+    "id": 48,
+    "title": "Sample Movie 48",
+    "genres": [
+      "Comedy"
+    ],
+    "year": 2018,
+    "director": "Director 48",
+    "plot": "An engaging story about adventure",
+    "rating": 6.5,
+    "runtime": 149,
+    "mood_tags": [
+      "exciting",
+      "emotional"
+    ],
+    "context_tags": [
+      "family",
+      "cozy"
+    ],
+    "poster_url": "/static/images/movie48.jpg"
+  },
+  {
+    "id": 49,
+    "title": "Sample Movie 49",
+    "genres": [
+      "Drama"
+    ],
+    "year": 2011,
+    "director": "Director 49",
+    "plot": "An engaging story about mystery",
+    "rating": 6.9,
+    "runtime": 166,
+    "mood_tags": [
+      "uplifting",
+      "emotional"
+    ],
+    "context_tags": [
+      "friday-night",
+      "family"
+    ],
+    "poster_url": "/static/images/movie49.jpg"
+  },
+  {
+    "id": 50,
+    "title": "Sample Movie 50",
+    "genres": [
+      "Action"
+    ],
+    "year": 2020,
+    "director": "Director 50",
+    "plot": "An engaging story about discovery",
+    "rating": 7.6,
+    "runtime": 90,
+    "mood_tags": [
+      "intense",
+      "emotional"
+    ],
+    "context_tags": [
+      "friday-night",
+      "family"
+    ],
+    "poster_url": "/static/images/movie50.jpg"
+  }
+]

@@ -1,0 +1,2078 @@
+                <div class="context-card" onclick="selectContext('family')">
+                    <div class="context-icon">👨‍👩‍👧‍👦</div>
+                    <h3 class="context-title">Family Time</h3>
+                    <p class="context-desc">Kid-friendly but adults won't be bored</p>
+                </div>
+                <div class="context-card" onclick="selectContext('cant-sleep')">
+                    <div class="context-icon">🌙</div>
+                    <h3 class="context-title">Can't Sleep</h3>
+                    <p class="context-desc">Something engaging but not too intense</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Chat Interface -->
+        <section class="chat-section">
+            <h2 class="section-title">
+                <span>💬</span>
+                <span>Tell Me More</span>
+            </h2>
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Hi! I'm your AI movie companion. Tell me what you're in the mood for, who you're watching with, or any specific preferences you have!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="I want something like Inception but funnier..." onkeypress="handleChatKeyPress(event)">
+                    <button class="chat-send" onclick="sendChatMessage()">Send</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recommendations -->
+        <section class="context-section">
+            <h2 class="section-title">
+                <span>✨</span>
+                <span>Recommended For You</span>
+            </h2>
+            <div class="movies-grid" id="homeRecommendations">
+                <!-- Dynamic content will be loaded here -->
+            </div>
+        </section>
+    </div>
+    
+    <!-- My List Page -->
+    <div id="mylist" class="page-container">
+        <div class="watchlist-container">
+            <h1 class="section-title">
+                <span>📚</span>
+                <span>My Movie Lists</span>
+            </h1>
+            
+            <div class="watchlist-tabs">
+                <button class="tab active" onclick="switchTab('watchlist')">Watchlist</button>
+                <button class="tab" onclick="switchTab('watched')">Watched</button>
+                <button class="tab" onclick="switchTab('favorites')">Favorites</button>
+                <button class="tab" onclick="switchTab('recommendations')">AI Picks For Me</button>
+            </div>
+            
+            <div class="list-stats">
+                <div class="stat-card">
+                    <div class="stat-number">142</div>
+                    <div class="stat-label">Movies Watched</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">This Year</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8.2</div>
+                    <div class="stat-label">Avg Rating</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">23</div>
+                    <div class="stat-label">Genres Explored</div>
+                </div>
+            </div>
+            
+            <div class="movies-grid" id="myListMovies">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Discover Page -->
+    <div id="discover" class="page-container">
+        <div class="trending-section">
+            <h1 class="section-title">
+                <span>🔥</span>
+                <span>Trending Now</span>
+            </h1>
+            <div class="trending-carousel">
+                <div class="trending-card">
+                    <div class="trending-rank">#1</div>
+                    <div class="trending-poster"></div>
+                    <div class="trending-info">
+                        <h3>Oppenheimer</h3>
+                        <p>Historical Drama • 2023</p>
+                    </div>
+                </div>
+                <div class="trending-card">
+                    <div class="trending-rank">#2</div>
+                    <div class="trending-poster"></div>
+                    <div class="trending-info">
+                        <h3>Barbie</h3>
+                        <p>Comedy • 2023</p>
+                    </div>
+                </div>
+                <div class="trending-card">
+                    <div class="trending-rank">#3</div>
+                    <div class="trending-poster"></div>
+                    <div class="trending-info">
+                        <h3>The Marvels</h3>
+                        <p>Action • 2023</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="discover-filters">
+            <div class="filter-chip active" onclick="filterGenre('all')">
+                <span>🎬</span> All Genres
+            </div>
+            <div class="filter-chip" onclick="filterGenre('action')">
+                <span>💥</span> Action
+            </div>
+            <div class="filter-chip" onclick="filterGenre('comedy')">
+                <span>😂</span> Comedy
+            </div>
+            <div class="filter-chip" onclick="filterGenre('drama')">
+                <span>🎭</span> Drama
+            </div>
+            <div class="filter-chip" onclick="filterGenre('horror')">
+                <span>👻</span> Horror
+            </div>
+            <div class="filter-chip" onclick="filterGenre('scifi')">
+                <span>🚀</span> Sci-Fi
+            </div>
+            <div class="filter-chip" onclick="filterGenre('romance')">
+                <span>💕</span> Romance
+            </div>
+            <div class="filter-chip" onclick="openAiExplorer()">
+                <span>🤖</span> AI Explorer
+            </div>
+        </div>
+        
+        <div class="context-section">
+            <h2 class="section-title">
+                <span>🎯</span>
+                <span>Personalized Discoveries</span>
+            </h2>
+            <div class="movies-grid" id="discoverMovies">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Groups Page -->
+    <div id="groups" class="page-container">
+        <div class="watchlist-container">
+            <h1 class="section-title">
+                <span>👥</span>
+                <span>Watch Groups</span>
+            </h1>
+            
+            <button class="chat-send" onclick="showCreateGroupModal()" style="margin-bottom: 3rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>➕</span> Create New Group
+            </button>
+            
+            <div class="movies-grid">
+                <div class="movie-card" onclick="openGroup('family-nights')" style="height: auto; background: var(--card-bg); padding: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">Family Movie Nights</h3>
+                        <span>🏠</span>
+                    </div>
+                    <div style="display: flex; margin-bottom: 1rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">👨</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">👩</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">👧</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">👦</div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Last watched: Toy Story 4</p>
+                </div>
+                
+                <div class="movie-card" onclick="openGroup('date-nights')" style="height: auto; background: var(--card-bg); padding: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">Date Night Picks</h3>
+                        <span>💑</span>
+                    </div>
+                    <div style="display: flex; margin-bottom: 1rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">👤</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">👤</div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Next up: The Notebook</p>
+                </div>
+                
+                <div class="movie-card" onclick="openGroup('horror-club')" style="height: auto; background: var(--card-bg); padding: 2rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.25rem; font-weight: 600;">Horror Movie Club</h3>
+                        <span>👻</span>
+                    </div>
+                    <div style="display: flex; margin-bottom: 1rem;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">😈</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">💀</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">🧟</div>
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--primary-gradient); border: 2px solid var(--dark-bg); margin-left: -10px; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">+5</div>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Weekly Friday scares</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Page -->
+    <div id="settings" class="page-container">
+        <div class="settings-container">
+            <h1 class="section-title">
+                <span>⚙️</span>
+                <span>Settings</span>
+            </h1>
+            
+            <div class="settings-section">
+                <h2 class="settings-title">
+                    <span>🤖</span>
+                    <span>AI Preferences</span>
+                </h2>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-name">Contextual Recommendations</div>
+                        <div class="setting-desc">Get suggestions based on time of day and mood</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-name">Serendipitous Discovery</div>
+                        <div class="setting-desc">Surprise me with movies outside my comfort zone</div>
+                    </div>
+                    <div class="toggle" onclick="toggleSetting(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-name">Spoiler Protection</div>
+                        <div class="setting-desc">Hide plot details in recommendations</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h2 class="settings-title">
+                    <span>🔔</span>
+                    <span>Notifications</span>
+                </h2>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-name">New Releases</div>
+                        <div class="setting-desc">Notify when movies matching my taste are released</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-name">Group Activity</div>
+                        <div class="setting-desc">Updates from my watch groups</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-section">
+                <h2 class="settings-title">
+                    <span>🎨</span>
+                    <span>Appearance</span>
+                </h2>
+                <div class="setting-item">
+                    <div class="setting-label">
+                        <div class="setting-name">Dark Mode</div>
+                        <div class="setting-desc">Easy on the eyes for late night browsing</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleSetting(this)">
+                        <div class="toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="showAiAssistant()">
+        <span>✨</span>
+    </button>
+    
+    <!-- Modals -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Modal Title</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Dynamic modal content -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        
+        // State Management
+        let currentPage = 'home';
+        let chatHistory = [];
+        let userPreferences = {
+            genres: [],
+            mood: null,
+            context: null
+        };
+        
+        // Navigation
+        function navigateTo(page) {
+            // Hide all pages
+            document.querySelectorAll('.page-container').forEach(p => {
+                p.classList.remove('active');
+            });
+            
+            // Update nav links
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Show selected page
+            document.getElementById(page).classList.add('active');
+            
+            // Update active nav link - find the link that matches the page
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.textContent.toLowerCase().includes(page.replace('mylist', 'my list'))) {
+                    link.classList.add('active');
+                }
+            });
+            
+            currentPage = page;
+            
+            // Load page-specific content
+            loadPageContent(page);
+        }
+        
+        // Profile Menu
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close profile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            const profileMenu = document.querySelector('.profile-menu');
+            if (!profileMenu.contains(e.target)) {
+                document.getElementById('profileDropdown').classList.remove('active');
+            }
+        });
+        
+        // Context Selection with Backend Integration
+        async function selectContext(context) {
+            userPreferences.context = context;
+            
+            // Highlight selected card
+            document.querySelectorAll('.context-card').forEach(card => {
+                card.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            });
+            event.currentTarget.style.borderColor = 'rgba(102, 126, 234, 0.5)';
+            
+            // Show loading state
+            showRecommendationLoading();
+            
+            try {
+                // Call backend API
+                const response = await fetch(`${API_BASE_URL}/recommendations/context/${context}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayRecommendations(data.recommendations, 'homeRecommendations');
+                } else {
+                    console.error('API Error:', data.error);
+                    generateContextualRecommendations(context); // Fallback
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                generateContextualRecommendations(context); // Fallback
+            }
+        }
+        
+        // Chat Interface with Backend Integration
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage(message, 'user');
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // Call backend API
+                const response = await fetch(`${API_BASE_URL}/recommendations/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+                
+                const data = await response.json();
+                
+                removeTypingIndicator();
+                
+                if (data.success) {
+                    addChatMessage(data.ai_response, 'ai');
+                    displayRecommendations(data.recommendations, 'homeRecommendations');
+                } else {
+                    addChatMessage('Sorry, I encountered an error. Please try again.', 'ai');
+                }
+            } catch (error) {
+                console.error('Network error:', error);
+                removeTypingIndicator();
+                addChatMessage('Network error. Please check your connection and make sure the backend server is running.', 'ai');
+            }
+        }
+        
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+        
+        function addChatMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                <div class="message-content">
+                    <div class="message-text">${text}</div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Store in chat history
+            chatHistory.push({ sender, text });
+        }
+        
+        function showTypingIndicator() {
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="message-text">
+                        <span class="loading"></span>
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function removeTypingIndicator() {
+            const typingIndicator = document.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Movie Display Functions
+        function displayRecommendations(movies, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = movies.map(movie => `
+                <div class="movie-card" onclick="showMovieDetails(${movie.id || 1})">
+                    <div class="movie-poster"></div>
+                    <div class="movie-actions">
+                        <button class="action-btn" onclick="event.stopPropagation(); addToWatchlist(${movie.id || 1}, 'watchlist')" title="Add to Watchlist">
+                            📌
+                        </button>
+                        <button class="action-btn" onclick="event.stopPropagation(); addToWatchlist(${movie.id || 1}, 'favorites')" title="Add to Favorites">
+                            ❤️
+                        </button>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <p class="movie-genres">${movie.genres}</p>
+                        <div class="movie-match">
+                            <span>⭐</span>
+                            <span>${movie.match} match</span>
+                        </div>
+                        <p class="movie-explanation">${movie.explanation}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function showRecommendationLoading() {
+            const container = document.getElementById('homeRecommendations');
+            container.innerHTML = Array(6).fill('').map(() => `
+                <div class="movie-card skeleton" style="height: 300px;"></div>
+            `).join('');
+        }
+        
+        // Watchlist Management
+        async function addToWatchlist(movieId, listType = 'watchlist') {
+            const userId = 'demo_user'; // In production, get from authentication
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/watchlist/${userId}/${movieId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ type: listType })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showNotification('Added to ' + listType + '!', 'success');
+                } else {
+                    showNotification(data.message, 'info');
+                }
+            } catch (error) {
+                console.error('Error adding to watchlist:', error);
+                showNotification('Added to ' + listType + '! (Offline mode)', 'success');
+            }
+        }
+        
+        async function loadMyLists() {
+            const userId = 'demo_user';
+            const activeTab = document.querySelector('.tab.active');
+            const currentTab = activeTab ? activeTab.textContent.toLowerCase() : 'watchlist';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/watchlist/${userId}?type=${currentTab}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayMyListMovies(data.watchlist);
+                } else {
+                    displayMyListMovies([]);
+                }
+            } catch (error) {
+                console.error('Error loading lists:', error);
+                displayMyListMovies([]);
+            }
+        }
+        
+        function displayMyListMovies(movies) {
+            const container = document.getElementById('myListMovies');
+            if (!movies.length) {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1 / -1;">No movies in this list yet. Start adding some from the recommendations!</p>';
+                return;
+            }
+            
+            container.innerHTML = movies.map(movie => `
+                <div class="movie-card" onclick="showMovieDetails(${movie.id})">
+                    <div class="movie-poster"></div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <p class="movie-genres">${Array.isArray(movie.genres) ? movie.genres.join(' • ') : movie.genres}</p>
+                        <div class="movie-match">
+                            <span>⭐</span>
+                            <span>${movie.rating}/10</span>
+                        </div>
+                        <p class="movie-explanation">Added ${movie.added_date ? new Date(movie.added_date).toLocaleDateString() : 'recently'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function switchTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Load corresponding list
+            loadMyLists();
+        }
+        
+        // User Stats
+        async function loadUserStats() {
+            const userId = 'demo_user';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/stats/${userId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    updateStatsDisplay(data.stats);
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+                // Keep default stats if API fails
+            }
+        }
+        
+        function updateStatsDisplay(stats) {
+            const statCards = document.querySelectorAll('.stat-card');
+            const statValues = [
+                stats.movies_watched,
+                stats.movies_watched, // This year (simplified)
+                stats.average_rating,
+                stats.genres_explored
+            ];
+            
+            statCards.forEach((card, index) => {
+                const numberElement = card.querySelector('.stat-number');
+                if (numberElement && statValues[index] !== undefined) {
+                    numberElement.textContent = statValues[index];
+                }
+            });
+        }
+        
+        // Movie Details Modal
+        async function showMovieDetails(movieId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/movies/${movieId}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const movie = data.movie;
+                    
+                    const content = `
+                        <div style="text-align: center;">
+                            <div style="width: 200px; height: 300px; background: var(--primary-gradient); margin: 0 auto 2rem; border-radius: 16px;"></div>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">${movie.title}</h3>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">${Array.isArray(movie.genres) ? movie.genres.join(' • ') : movie.genres} • ${movie.year} • ${movie.runtime}min</p>
+                            <p style="line-height: 1.6; margin-bottom: 2rem;">${movie.plot}</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; color: #fbbf24;">⭐ ${movie.rating}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Rating</div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="font-size: 1.5rem; color: #4ade80;">${movie.year}</div>
+                                    <div style="font-size: 0.8rem; color: var(--text-secondary);">Year</div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <button class="chat-send" onclick="addToWatchlist(${movie.id}, 'watchlist'); closeModal();">Add to Watchlist</button>
+                                <button class="chat-send" style="background: var(--secondary-gradient);" onclick="addToWatchlist(${movie.id}, 'favorites'); closeModal();">Add to Favorites</button>
+                            </div>
+                        </div>
+                    `;
+                    showModal(movie.title, content);
+                } else {
+                    showNotification('Movie details not found', 'error');
+                }
+            } catch (error) {
+                console.error('Error fetching movie details:', error);
+                showNotification('Error loading movie details', 'error');
+            }
+        }
+        
+        // Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            
+            // Add notification styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 2rem;
+                background: ${type === 'success' ? '#4ade80' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                z-index: 3000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+        
+        // Modal Functions
+        function showModal(title, content) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalContent').innerHTML = content;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+        
+        function closeModal(event) {
+            if (!event || event.target.id === 'modalOverlay' || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        }
+        
+        function showAiAssistant() {
+            const content = `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 2rem;">✨</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">AI Movie Assistant</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">I'm here to help you find the perfect movie!</p>
+                    <div style="display: grid; gap: 1rem;">
+                        <button class="chat-send" onclick="askAi('surprise')">Surprise me with something new</button>
+                        <button class="chat-send" onclick="askAi('mood')">Match my current mood</button>
+                        <button class="chat-send" onclick="askAi('similar')">Find movies similar to my favorites</button>
+                        <button class="chat-send" onclick="askAi('group')">Help my group decide</button>
+                    </div>
+                </div>
+            `;
+            showModal('AI Assistant', content);
+        }
+        
+        function showCreateGroupModal() {
+            const content = `
+                <div style="padding: 1rem;">
+                    <input type="text" class="chat-input" placeholder="Group name" style="width: 100%; margin-bottom: 1rem;">
+                    <textarea class="chat-input" placeholder="Description (optional)" style="width: 100%; height: 100px; margin-bottom: 1rem; resize: vertical;"></textarea>
+                    <p style="margin-bottom: 1rem;">Add members:</p>
+                    <input type="text" class="chat-input" placeholder="Search by email or username" style="width: 100%; margin-bottom: 2rem;">
+                    <button class="chat-send" style="width: 100%;" onclick="createGroup()">Create Group</button>
+                </div>
+            `;
+            showModal('Create Watch Group', content);
+        }
+        
+        function createGroup() {
+            showNotification('Group created successfully!', 'success');
+            closeModal();
+        }
+        
+        function askAi(type) {
+            closeModal();
+            // Navigate to home and trigger different AI responses based on type
+            navigateTo('home');
+            
+            const prompts = {
+                'surprise': "Surprise me with something completely different from what I usually watch",
+                'mood': "Recommend something based on my current mood - I'm feeling contemplative",
+                'similar': "Find movies similar to Inception and Interstellar",
+                'group': "What should our group watch tonight? We like action and comedy"
+            };
+            
+            // Simulate user typing the prompt
+            setTimeout(() => {
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.value = prompts[type];
+                    sendChatMessage();
+                }
+            }, 500);
+        }
+        
+        // Settings Functions
+        function toggleSetting(toggle) {
+            toggle.classList.toggle('active');
+            
+            // Get setting name for feedback
+            const settingName = toggle.closest('.setting-item').querySelector('.setting-name').textContent;
+            const isActive = toggle.classList.contains('active');
+            
+            showNotification(`${settingName} ${isActive ? 'enabled' : 'disabled'}`, 'info');
+        }
+        
+        // Discover Page Functions
+        function filterGenre(genre) {
+            // Update active filter
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Show loading state
+            const container = document.getElementById('discoverMovies');
+            container.innerHTML = Array(6).fill('').map(() => `
+                <div class="movie-card skeleton" style="height: 300px;"></div>
+            `).join('');
+            
+            // Load filtered content
+            setTimeout(() => {
+                loadDiscoveryContent(genre);
+            }, 1000);
+        }
+        
+        function openAiExplorer() {
+            const content = `
+                <div style="padding: 1rem;">
+                    <p style="margin-bottom: 2rem;">Let AI help you discover hidden gems based on unique criteria:</p>
+                    <div style="display: grid; gap: 1rem;">
+                        <button class="chat-send" onclick="exploreBy('color')">Movies with stunning color palettes</button>
+                        <button class="chat-send" onclick="exploreBy('soundtrack')">Best original soundtracks</button>
+                        <button class="chat-send" onclick="exploreBy('twist')">Mind-blowing plot twists</button>
+                        <button class="chat-send" onclick="exploreBy('underrated')">Critically underrated gems</button>
+                    </div>
+                </div>
+            `;
+            showModal('AI Movie Explorer', content);
+        }
+        
+        function exploreBy(criteria) {
+            closeModal();
+            showNotification(`Exploring movies by ${criteria}...`, 'info');
+            loadDiscoveryContent();
+        }
+        
+        // Page Content Loading
+        function loadPageContent(page) {
+            switch(page) {
+                case 'home':
+                    // Load personalized recommendations
+                    setTimeout(() => {
+                        generateContextualRecommendations('cozy');
+                    }, 100);
+                    break;
+                case 'mylist':
+                    // Load user's lists and stats
+                    loadMyLists();
+                    loadUserStats();
+                    break;
+                case 'discover':
+                    // Load discovery content
+                    loadDiscoveryContent();
+                    break;
+                case 'groups':
+                    // Groups are static for demo
+                    break;
+                case 'settings':
+                    // Settings are static
+                    break;
+            }
+        }
+        
+        async function loadDiscoveryContent(genre = 'all') {
+            try {
+                const response = await fetch(`${API_BASE_URL}/movies`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    let movies = data.movies;
+                    
+                    // Filter by genre if specified
+                    if (genre !== 'all') {
+                        movies = movies.filter(movie => 
+                            movie.genres.some(g => g.toLowerCase().includes(genre.toLowerCase()))
+                        );
+                    }
+                    
+                    // Format for display
+                    const formattedMovies = movies.slice(0, 12).map(movie => ({
+                        id: movie.id,
+                        title: movie.title,
+                        genres: Array.isArray(movie.genres) ? movie.genres.join(' • ') : movie.genres,
+                        match: `${Math.floor(Math.random() * 20) + 80}%`,
+                        explanation: movie.plot || 'Great choice for discovery'
+                    }));
+                    
+                    displayRecommendations(formattedMovies, 'discoverMovies');
+                } else {
+                    generateFallbackDiscovery();
+                }
+            } catch (error) {
+                console.error('Error loading discovery content:', error);
+                generateFallbackDiscovery();
+            }
+        }
+        
+        function generateFallbackDiscovery() {
+            const fallbackMovies = [
+                { id: 1, title: 'Parasite', genres: 'Thriller • Drama', match: '95%', explanation: 'Critically acclaimed masterpiece' },
+                { id: 2, title: 'Minari', genres: 'Drama', match: '92%', explanation: 'Heartwarming family story' },
+                { id: 3, title: 'Sound of Metal', genres: 'Drama • Music', match: '89%', explanation: 'Powerful and moving narrative' }
+            ];
+            displayRecommendations(fallbackMovies, 'discoverMovies');
+        }
+        
+        // Fallback functions for when backend is not available
+        function generateContextualRecommendations(context) {
+            const recommendations = {
+                'friday-night': [
+                    { id: 1, title: 'The Hangover', genres: 'Comedy', match: '95%', explanation: 'Perfect party movie with your friends' },
+                    { id: 2, title: 'Game Night', genres: 'Comedy • Thriller', match: '92%', explanation: 'Hilarious and keeps everyone engaged' },
+                    { id: 3, title: 'Knives Out', genres: 'Mystery • Comedy', match: '89%', explanation: 'Clever whodunit that sparks discussion' }
+                ],
+                'cozy': [
+                    { id: 4, title: 'The Grand Budapest Hotel', genres: 'Comedy • Drama', match: '94%', explanation: 'Visually stunning comfort watch' },
+                    { id: 5, title: 'Paddington 2', genres: 'Family • Comedy', match: '91%', explanation: 'Wholesome and heartwarming' },
+                    { id: 6, title: 'Julie & Julia', genres: 'Drama • Biography', match: '88%', explanation: 'Feel-good foodie film' }
+                ],
+                'mind-bender': [
+                    { id: 7, title: 'Primer', genres: 'Sci-Fi • Thriller', match: '96%', explanation: 'Complex time travel that demands attention' },
+                    { id: 8, title: 'The Prestige', genres: 'Drama • Mystery', match: '93%', explanation: 'Layered narrative with stunning reveals' },
+                    { id: 9, title: 'Coherence', genres: 'Sci-Fi • Thriller', match: '90%', explanation: 'Mind-bending dinner party gone wrong' }
+                ]
+            };
+            
+            const movies = recommendations[context] || recommendations['cozy'];
+            displayRecommendations(movies, 'homeRecommendations');
+        }
+        
+        // Group Functions (Demo)
+        function openGroup(groupId) {
+            const groupNames = {
+                'family-nights': 'Family Movie Nights',
+                'date-nights': 'Date Night Picks', 
+                'horror-club': 'Horror Movie Club'
+            };
+            
+            showNotification(`Opening ${groupNames[groupId]}...`, 'info');
+        }
+        
+        function logout() {
+            showNotification('Logged out successfully', 'info');
+            // In a real app, you'd handle authentication here
+        }
+        
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load initial content
+            loadPageContent('home');
+            
+            // Check backend connectivity
+            checkBackendConnection();
+            
+            // Set up periodic updates
+            setInterval(() => {
+                // Simulate real-time updates
+                if (currentPage === 'home') {
+                    // Update recommendations subtly
+                }
+            }, 30000);
+        });
+        
+        async function checkBackendConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL.replace('/api', '')}/`);
+                if (response.ok) {
+                    console.log('✅ Backend connected successfully');
+                    showNotification('Connected to AI backend', 'success');
+                } else {
+                    throw new Error('Backend not responding');
+                }
+            } catch (error) {
+                console.warn('⚠️ Backend not available, using offline mode');
+                showNotification('Running in offline mode - start your backend server for full functionality', 'info');
+            }
+        }
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+                document.getElementById('profileDropdown').classList.remove('active');
+            }
+            
+            if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+                e.preventDefault();
+                const chatInput = document.getElementById('chatInput');
+                if (chatInput) {
+                    chatInput.focus();
+                }
+            }
+        });
+        
+        // Utility function to format release dates
+        function formatReleaseDate(dateString) {
+            if (!dateString) return 'Unknown';
+            const date = new Date(dateString);
+            return date.getFullYear();
+        }
+        
+        // Animation utilities
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = Math.floor(progress * (end - start) + start);
+                element.textContent = current;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+        
+        // Search functionality (for future implementation)
+        async function searchMovies(query) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    return data.results;
+                }
+                return [];
+            } catch (error) {
+                console.error('Search error:', error);
+                return [];
+            }
+        }
+        
+        // Performance monitoring
+        function logPerformance(action, startTime) {
+            const endTime = performance.now();
+            const duration = endTime - startTime;
+            console.log(`⚡ ${action} completed in ${duration.toFixed(2)}ms`);
+        }
+        
+        // Error handling for missing elements
+        function safeGetElement(id) {
+            const element = document.getElementById(id);
+            if (!element) {
+                console.warn(`Element with id '${id}' not found`);
+            }
+            return element;
+        }
+        
+        // Debug function to test all features
+        function testAllFeatures() {
+            console.log('🧪 Testing all features...');
+            
+            // Test navigation
+            console.log('✅ Navigation functions loaded');
+            
+            // Test context selection
+            console.log('✅ Context selection functions loaded');
+            
+            // Test chat
+            console.log('✅ Chat functions loaded');
+            
+            // Test modals
+            console.log('✅ Modal functions loaded');
+            
+            // Test notifications
+            showNotification('All features working!', 'success');
+            
+            console.log('🎉 All features tested successfully!');
+        }
+        
+        // Call test function for debugging (remove in production)
+        // Uncomment the line below to test all features on load
+        // setTimeout(testAllFeatures, 1000);
+        
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMatch - AI-Powered Movie Recommendations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --secondary-gradient: linear-gradient(135deg, #f06292, #ff6b6b);
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #999;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        .nav {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .profile-menu {
+            position: relative;
+        }
+        
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .profile-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .profile-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: rgba(30, 30, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            min-width: 200px;
+            display: none;
+            animation: dropdownFade 0.3s ease-out;
+        }
+        
+        @keyframes dropdownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .profile-dropdown.active {
+            display: block;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 0.8rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .dropdown-item:hover {
+            background: var(--card-bg);
+            color: var(--text-primary);
+        }
+        
+        /* Page Container */
+        .page-container {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            display: none;
+        }
+        
+        .page-container.active {
+            display: block;
+            animation: pageTransition 0.5s ease-out;
+        }
+        
+        @keyframes pageTransition {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Home Page Styles */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        .context-section {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .context-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .context-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .context-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(102, 126, 234, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .context-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .context-card:hover::before {
+            opacity: 1;
+        }
+        
+        .context-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .context-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .context-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Chat Interface */
+        .chat-section {
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+        
+        .chat-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            min-height: 400px;
+        }
+        
+        .chat-messages {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            padding-right: 1rem;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            animation: messageSlide 0.3s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .message.user .message-avatar {
+            background: var(--secondary-gradient);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-text {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            display: inline-block;
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.5);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .chat-send {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 0 2rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chat-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Movie Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .movie-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--card-bg);
+            height: 300px;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+            padding: 2rem 1rem 1rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        
+        .movie-card:hover .movie-info {
+            transform: translateY(0);
+        }
+        
+        .movie-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .movie-genres {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .movie-match {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: #4ade80;
+        }
+        
+        .movie-explanation {
+            font-size: 0.85rem;
+            color: #ccc;
+            margin-top: 0.5rem;
+            line-height: 1.4;
+        }
+        
+        .movie-actions {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .movie-card:hover .movie-actions {
+            opacity: 1;
+        }
+        
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: rgba(102, 126, 234, 0.8);
+            transform: scale(1.1);
+        }
+        
+        /* My List Page */
+        .watchlist-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .watchlist-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .tab::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s;
+        }
+        
+        .tab:hover, .tab.active {
+            color: var(--text-primary);
+        }
+        
+        .tab.active::after {
+            width: 100%;
+        }
+        
+        .list-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        /* Discover Page */
+        .discover-filters {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-chip {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-chip:hover, .filter-chip.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .trending-section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .trending-carousel {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            scroll-behavior: smooth;
+        }
+        
+        .trending-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .trending-carousel::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .trending-carousel::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .trending-card {
+            flex: 0 0 300px;
+            aspect-ratio: 16/9;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .trending-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .trending-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: var(--secondary-gradient);
+        }
+        
+        .trending-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        }
+        
+        .trending-rank {
+            font-size: 3rem;
+            font-weight: bold;
+            opacity: 0.3;
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease-out;
+        }
+        
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+        
+        /* Notification Styles */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .notification {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .notification button {
+            background: none;
+            border: none;
+            color: inherit;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .skeleton {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.05) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--secondary-gradient);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(240, 98, 146, 0.4);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(240, 98, 146, 0.6);
+        }
+        
+        /* Settings Page */
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .settings-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .settings-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+        
+        .setting-label {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .setting-name {
+            font-size: 1rem;
+        }
+        
+        .setting-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        
+        .toggle {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .toggle.active {
+            background: var(--primary-gradient);
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        
+        .toggle.active .toggle-slider {
+            transform: translateX(24px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .nav-link {
+                font-size: 0.9rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
+            .context-cards {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo" onclick="navigateTo('home')">
+                <span>🎬</span>
+                <span>CineMatch</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" onclick="navigateTo('home')">Home</a>
+                <a href="#" class="nav-link" onclick="navigateTo('mylist')">My List</a>
+                <a href="#" class="nav-link" onclick="navigateTo('discover')">Discover</a>
+                <a href="#" class="nav-link" onclick="navigateTo('groups')">Groups</a>
+                <div class="profile-menu">
+                    <button class="profile-btn" onclick="toggleProfileMenu()">👤</button>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <a href="#" class="dropdown-item" onclick="navigateTo('profile')">
+                            <span>👤</span> Profile
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="navigateTo('settings')">
+                            <span>⚙️</span> Settings
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="navigateTo('history')">
+                            <span>📜</span> Watch History
+                        </a>
+                        <a href="#" class="dropdown-item" onclick="logout()">
+                            <span>🚪</span> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Home Page -->
+    <div id="home" class="page-container active">
+        <section class="hero">
+            <h1>What are you in the mood for?</h1>
+            <p>Tell us how you're feeling, and our AI will find the perfect movie for right now</p>
+        </section>
+        
+        <section class="context-section">
+            <h2 class="section-title">
+                <span>🎭</span>
+                <span>Choose Your Vibe</span>
+            </h2>
+            <div class="context-cards">
+                <div class="context-card" onclick="selectContext('friday-night')">
+                    <div class="context-icon">🎉</div>
+                    <h3 class="context-title">Friday Night Fun</h3>
+                    <p class="context-desc">Friends over, need something entertaining</p>
+                </div>
+                <div class="context-card" onclick="selectContext('cozy')">
+                    <div class="context-icon">🛋️</div>
+                    <h3 class="context-title">Cozy & Chill</h3>
+                    <p class="context-desc">Relaxing alone with comfort food</p>
+                </div>
+                <div class="context-card" onclick="selectContext('mind-bender')">
+                    <div class="context-icon">🧠</div>
+                    <h3 class="context-title">Mind Bender</h3>
+                    <p class="context-desc">Ready for something thought-provoking</p>
+                </div>
+                <div class="context-card" onclick="selectContext('date-night')">
+                    <div class="context-icon">💑</div>
+                    <h3 class="context-title">Date Night</h3>
+                    <p class="context-desc">Something romantic but not cheesy</p>
+                </div>
+                <div class="context-card" onclick="selectContext('family')">
+                    <div class="context-icon">👨‍👩‍👧

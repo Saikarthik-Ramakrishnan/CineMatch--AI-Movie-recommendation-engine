@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMatch - AI-Powered Movie Recommendations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea, #764ba2);
+            --secondary-gradient: linear-gradient(135deg, #f06292, #ff6b6b);
+            --accent-gradient: linear-gradient(135deg, #4ade80, #22c55e);
+            --dark-bg: #0a0a0a;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #999;
+            --success: #4ade80;
+            --error: #ef4444;
+            --warning: #fbbf24;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Navigation */
+        .nav {
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transition: width 0.3s;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+        }
+        
+        .nav-link:hover::after, .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .profile-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .profile-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Page Container */
+        .page-container {
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: radial-gradient(circle at 50% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: var(--secondary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        /* Context Section */
+        .context-section {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .context-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+        
+        .context-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            user-select: none;
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .context-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(102, 126, 234, 0.2));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .context-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(102, 126, 234, 0.7);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+        
+        .context-card:hover::before {
+            opacity: 1;
+        }
+        
+        .context-card.selected {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .context-card.selected::before {
+            background: linear-gradient(135deg, transparent, rgba(74, 222, 128, 0.2));
+            opacity: 1;
+        }
+        
+        .context-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .context-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            font-weight: 600;
+        }
+        
+        .context-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+            line-height: 1.4;
+        }
+        
+        /* Enhanced Chat Interface */
+        .chat-section {
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+        
+        .chat-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 2rem;
+            min-height: 450px;
+            position: relative;
+        }
+        
+        .chat-messages {
+            max-height: 350px;
+            overflow-y: auto;
+            margin-bottom: 2rem;
+            padding-right: 1rem;
+            scroll-behavior: smooth;
+        }
+        
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+        }
+        
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            animation: messageSlide 0.4s ease-out;
+        }
+        
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.2rem;
+        }
+        
+        .message.user .message-avatar {
+            background: var(--secondary-gradient);
+        }
+        
+        .message-content {
+            flex: 1;
+        }
+        
+        .message-text {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1rem 1.5rem;
+            border-radius: 16px;
+            display: inline-block;
+            max-width: 100%;
+            line-height: 1.5;
+        }
+        
+        .message.user .message-text {
+            background: rgba(240, 98, 146, 0.2);
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 8px 0;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+            animation: typingBounce 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typingBounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+        }
+        
+        .chat-input:focus {
+            outline: none;
+            border-color: rgba(102, 126, 234, 0.7);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .chat-send {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            padding: 0 2rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 80px;
+            height: 50px;
+        }
+        
+        .chat-send:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .chat-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quick-action:hover {
+            background: rgba(102, 126, 234, 0.3);
+            color: white;
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        /* Enhanced Movie Grid */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .movie-card {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            background: var(--card-bg);
+            height: 350px;
+            border: 2px solid var(--border-color);
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            height: 70%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.7));
+            padding: 1.5rem;
+            height: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+        
+        .movie-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+        
+        .movie-genres {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.8rem;
+        }
+        
+        .movie-match {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--success);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .movie-explanation {
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.4;
+            opacity: 0.9;
+        }
+        
+        /* Loading States */
+        .loading-card {
+            background: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+        
+        .status-indicator {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            max-width: 300px;
+            z-index: 999;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .status-indicator.show {
+            transform: translateX(0);
+        }
+        
+        .status-indicator.success {
+            border-color: var(--success);
+            background: rgba(74, 222, 128, 0.1);
+        }
+        
+        .status-indicator.error {
+            border-color: var(--error);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        
+        /* Debug Section */
+        .debug {
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 12px;
+            margin: 1rem 2rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.8rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .debug::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .debug::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+        
+        .success { color: var(--success); }
+        .error { color: var(--error); }
+        .info { color: #3b82f6; }
+        .warning { color: var(--warning); }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                gap: 1rem;
+            }
+            
+            .context-cards {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+            
+            .chat-input-container {
+                flex-direction: column;
+            }
+            
+            .chat-send {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="logo">
+                <span>🎬</span>
+                <span>CineMatch</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active">Home</a>
+                <a href="#" class="nav-link">My List</a>
+                <a href="#" class="nav-link">Discover</a>
+                <a href="#" class="nav-link">Groups</a>
+                <button class="profile-btn">👤</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Status Indicator -->
+    <div id="statusIndicator" class="status-indicator">
+        <div id="statusMessage"></div>
+    </div>
+    
+    <!-- Home Page -->
+    <div id="home" class="page-container">
+        <section class="hero">
+            <h1>What are you in the mood for?</h1>
+            <p>Tell us how you're feeling, and our AI will find the perfect movie for right now</p>
+        </section>
+        
+        <!-- Debug Section -->
+        <div id="debug" class="debug">
+            <strong>🔧 Debug Console:</strong><br>
+            <span id="debugInfo">Initializing CineMatch...</span>
+        </div>
+        
+        <section class="context-section">
+            <h2 class="section-title">
+                <span>🎭</span>
+                <span>Choose Your Vibe</span>
+            </h2>
+            <div class="context-cards">
+                <div class="context-card" data-context="friday-night">
+                    <div class="context-icon">🎉</div>
+                    <h3 class="context-title">Friday Night Fun</h3>
+                    <p class="context-desc">Friends over, need something entertaining and social</p>
+                </div>
+                <div class="context-card" data-context="cozy">
+                    <div class="context-icon">🛋️</div>
+                    <h3 class="context-title">Cozy & Chill</h3>
+                    <p class="context-desc">Relaxing alone with comfort food and blankets</p>
+                </div>
+                <div class="context-card" data-context="mind-bender">
+                    <div class="context-icon">🧠</div>
+                    <h3 class="context-title">Mind Bender</h3>
+                    <p class="context-desc">Ready for something thought-provoking and complex</p>
+                </div>
+                <div class="context-card" data-context="date-night">
+                    <div class="context-icon">💑</div>
+                    <h3 class="context-title">Date Night</h3>
+                    <p class="context-desc">Something romantic but not cheesy or predictable</p>
+                </div>
+                <div class="context-card" data-context="family">
+                    <div class="context-icon">👨‍👩‍👧‍👦</div>
+                    <h3 class="context-title">Family Time</h3>
+                    <p class="context-desc">Kid-friendly but adults won't be bored to tears</p>
+                </div>
+                <div class="context-card" data-context="cant-sleep">
+                    <div class="context-icon">🌙</div>
+                    <h3 class="context-title">Can't Sleep</h3>
+                    <p class="context-desc">Something engaging but not too intense or loud</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Enhanced Chat Interface -->
+        <section class="chat-section">
+            <h2 class="section-title">
+                <span>💬</span>
+                <span>Chat with AI</span>
+            </h2>
+            <div class="chat-container">
+                <div class="quick-actions">
+                    <div class="quick-action" onclick="sendQuickMessage('Something like Inception but funnier')">🧠 Smart comedy</div>
+                    <div class="quick-action" onclick="sendQuickMessage('A feel-good movie for rainy day')">☔ Feel-good</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Action movie with great plot')">💥 Smart action</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Underrated gems')">💎 Hidden gems</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Movies like Parasite')">🎭 Like Parasite</div>
+                </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                Hi! I'm your AI movie companion. Tell me what you're in the mood for, who you're watching with, or any specific preferences you have. I can recommend movies based on your context, mood, or even specific films you've enjoyed!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-container">
+                    <textarea 
+                        class="chat-input" 
+                        id="chatInput" 
+                        placeholder="I want something like Inception but funnier..."
+                        rows="1"
+                    ></textarea>
+                    <button class="chat-send" id="chatSend" onclick="sendChatMessage()">
+                        <span id="sendButtonText">Send</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Enhanced Recommendations -->
+        <section class="context-section">
+            <h2 class="section-title">
+                <span>✨</span>
+                <span>Recommended For You</span>
+                <span id="recommendationCount" style="font-size: 1rem; color: var(--text-secondary); margin-left: auto;"></span>
+            </h2>
+            <div class="movies-grid" id="homeRecommendations">
+                <div class="movie-card loading-card">
+                    <p>🎬 Select a vibe or chat to get recommendations!</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Enhanced Application State
+        class CineMatchApp {
+            constructor() {
+                this.apiBaseUrl = '/api';
+                this.chatHistory = [];
+                this.currentContext = null;
+                this.isLoading = false;
+                this.retryCount = 0;
+                this.maxRetries = 3;
+                
+                this.init();
+            }
+            
+            init() {
+                this.updateDebug('🚀 CineMatch Enhanced v2.0 Starting...');
+                this.setupEventListeners();
+                this.checkBackendConnection();
+                this.autoResize();
+            }
+            
+            setupEventListeners() {
+                // Context cards
+                document.querySelectorAll('.context-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const context = card.dataset.context;
+                        this.selectContext(context, card);
+                    });
+                    
+                    // Visual feedback
+                    card.addEventListener('mouseenter', () => {
+                        this.updateDebug(`👆 Hovering over: ${card.dataset.context}`);
+                    });
+                });
+                
+                // Chat input
+                const chatInput = document.getElementById('chatInput');
+                chatInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendChatMessage();
+                    }
+                });
+                
+                chatInput.addEventListener('input', this.autoResize);
+                
+                this.updateDebug('✅ Event listeners setup complete');
+            }
+            
+            autoResize() {
+                const textarea = document.getElementById('chatInput');
+                textarea.style.height = 'auto';
+                textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            }
+            
+            updateDebug(message, type = 'info') {
+                const debugInfo = document.getElementById('debugInfo');
+                const timestamp = new Date().toLocaleTimeString();
+                const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : '🔄';
+                const newMessage = `<br><span class="${type}">[${timestamp}] ${icon} ${message}</span>`;
+                
+                debugInfo.innerHTML += newMessage;
+                debugInfo.scrollTop = debugInfo.scrollHeight;
+                
+                console.log(`[${timestamp}] ${message}`);
+                
+                // Auto-clean debug log
+                const lines = debugInfo.innerHTML.split('<br>');
+                if (lines.length > 20) {
+                    debugInfo.innerHTML = lines.slice(-15).join('<br>');
+                }
+            }
+            
+            showStatus(message, type = 'info', duration = 3000) {
+                const indicator = document.getElementById('statusIndicator');
+                const messageEl = document.getElementById('statusMessage');
+                
+                indicator.className = `status-indicator show ${type}`;
+                messageEl.textContent = message;
+                
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, duration);
+            }
+            
+            async selectContext(context, cardElement) {
+                this.updateDebug(`🎯 Context selected: ${context}`);
+                this.currentContext = context;
+                
+                // Visual feedback
+                document.querySelectorAll('.context-card').forEach(c => c.classList.remove('selected'));
+                cardElement.classList.add('selected');
+                
+                this.showStatus(`Selected: ${context.replace('-', ' ')}`, 'success');
+                this.showRecommendationLoading();
+                
+                try {
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/recommendations/context/${context}`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.updateDebug(`✅ Got ${data.recommendations.length} recommendations for ${context}`, 'success');
+                        this.displayRecommendations(data.recommendations);
+                        this.showStatus(`Found ${data.recommendations.length} perfect matches!`, 'success');
+                    } else {
+                        throw new Error(data.error || 'API returned error');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Context API error: ${error.message}`, 'error');
+                    this.showStatus('Using backup recommendations', 'warning');
+                    this.generateFallbackRecommendations(context);
+                }
+            }
+            
+            async sendChatMessage(message = null) {
+                const input = document.getElementById('chatInput');
+                const finalMessage = message || input.value.trim();
+                
+                if (!finalMessage || this.isLoading) return;
+                
+                this.isLoading = true;
+                this.updateSendButton(true);
+                this.updateDebug(`💬 Sending: "${finalMessage}"`);
+                
+                // Add user message
+                this.addChatMessage(finalMessage, 'user');
+                
+                // Clear input
+                input.value = '';
+                this.autoResize();
+                
+                // Show typing indicator
+                this.showTypingIndicator();
+                
+                try {
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/recommendations/chat`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            message: finalMessage,
+                            context: this.currentContext,
+                            history: this.chatHistory.slice(-5) // Last 5 messages for context
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    this.removeTypingIndicator();
+                    
+                    if (data.success) {
+                        this.updateDebug(`✅ Chat response received`, 'success');
+                        this.addChatMessage(data.ai_response, 'ai');
+                        
+                        if (data.recommendations && data.recommendations.length > 0) {
+                            this.displayRecommendations(data.recommendations);
+                            this.showStatus(`Found ${data.recommendations.length} new recommendations!`, 'success');
+                        }
+                    } else {
+                        throw new Error(data.error || 'Chat API error');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Chat error: ${error.message}`, 'error');
+                    this.removeTypingIndicator();
+                    this.addChatMessage(
+                        'Sorry, I encountered an error. Please make sure the backend server is running and try again. In the meantime, try selecting a vibe card above!', 
+                        'ai'
+                    );
+                    this.showStatus('Chat temporarily unavailable', 'error');
+                } finally {
+                    this.isLoading = false;
+                    this.updateSendButton(false);
+                }
+            }
+            
+            sendQuickMessage(message) {
+                document.getElementById('chatInput').value = message;
+                this.sendChatMessage();
+            }
+            
+            updateSendButton(loading) {
+                const button = document.getElementById('chatSend');
+                const text = document.getElementById('sendButtonText');
+                
+                button.disabled = loading;
+                text.textContent = loading ? '...' : 'Send';
+            }
+            
+            addChatMessage(text, sender) {
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">${sender === 'user' ? '👤' : '🤖'}</div>
+                    <div class="message-content">
+                        <div class="message-text">${this.formatMessage(text)}</div>
+                    </div>
+                `;
+                
+                messagesContainer.appendChild(messageDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                
+                // Store in chat history
+                this.chatHistory.push({ sender, text });
+                
+                // Limit chat history
+                if (this.chatHistory.length > 20) {
+                    this.chatHistory = this.chatHistory.slice(-15);
+                }
+            }
+            
+            formatMessage(text) {
+                // Basic formatting for better readability
+                return text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n/g, '<br>');
+            }
+            
+            showTypingIndicator() {
+                const messagesContainer = document.getElementById('chatMessages');
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai typing-indicator';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-text">
+                            <div class="typing-indicator">
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                                <div class="typing-dot"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                messagesContainer.appendChild(typingDiv);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+            
+            removeTypingIndicator() {
+                const typingIndicator = document.querySelector('.typing-indicator');
+                if (typingIndicator && typingIndicator.closest('.message')) {
+                    typingIndicator.closest('.message').remove();
+                }
+            }
+            
+            displayRecommendations(movies) {
+                const container = document.getElementById('homeRecommendations');
+                const countEl = document.getElementById('recommendationCount');
+                
+                if (!movies || movies.length === 0) {
+                    container.innerHTML = '<div class="movie-card loading-card"><p>🎬 No recommendations found. Try a different context!</p></div>';
+                    countEl.textContent = '';
+                    return;
+                }
+                
+                countEl.textContent = `${movies.length} movies found`;
+                
+                container.innerHTML = movies.map((movie, index) => `
+                    <div class="movie-card" style="animation-delay: ${index * 0.1}s" onclick="app.showMovieDetails('${movie.title}')">
+                        <div class="movie-poster">🎬</div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">${movie.title}</h3>
+                            <p class="movie-genres">${movie.genres || 'Various Genres'}</p>
+                            <div class="movie-match">
+                                <span>⭐</span>
+                                <span>${movie.match || '95%'} match</span>
+                            </div>
+                            <p class="movie-explanation">${movie.explanation || 'Perfectly matches your mood!'}</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+                this.updateDebug(`🎬 Displayed ${movies.length} movies with enhanced UI`, 'success');
+            }
+            
+            showMovieDetails(title) {
+                this.updateDebug(`🎬 Movie clicked: ${title}`);
+                this.showStatus(`You clicked on "${title}"! (Movie details coming soon)`, 'info');
+                
+                // Future: Open modal with movie details
+                this.addChatMessage(`Tell me more about "${title}"`, 'user');
+                this.addChatMessage(`"${title}" is a great choice! Here are some details about this film...`, 'ai');
+            }
+            
+            showRecommendationLoading() {
+                const container = document.getElementById('homeRecommendations');
+                container.innerHTML = Array(6).fill('').map((_, i) => `
+                    <div class="movie-card loading-card" style="animation-delay: ${i * 0.1}s">
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                        <p>Finding perfect matches...</p>
+                    </div>
+                `).join('');
+            }
+            
+            generateFallbackRecommendations(context) {
+                const fallbackData = {
+                    'friday-night': [
+                        { title: 'The Grand Budapest Hotel', genres: 'Comedy • Adventure', match: '95%', explanation: 'Whimsical and entertaining for groups' },
+                        { title: 'Knives Out', genres: 'Mystery • Comedy', match: '92%', explanation: 'Perfect whodunit for friends' },
+                        { title: 'Game Night', genres: 'Comedy • Crime', match: '89%', explanation: 'Hilarious ensemble comedy' }
+                    ],
+                    'cozy': [
+                        { title: 'Little Women', genres: 'Drama • Romance', match: '94%', explanation: 'Warm and comforting family story' },
+                        { title: 'The Holiday', genres: 'Romance • Comedy', match: '91%', explanation: 'Perfect comfort movie vibes' },
+                        { title: 'Julie & Julia', genres: 'Biography • Comedy', match: '88%', explanation: 'Food and life inspiration' }
+                    ],
+                    'mind-bender': [
+                        { title: 'Inception', genres: 'Sci-Fi • Thriller', match: '98%', explanation: 'Mind-bending masterpiece' },
+                        { title: 'Primer', genres: 'Sci-Fi • Drama', match: '96%', explanation: 'Complex time travel puzzle' },
+                        { title: 'The Prestige', genres: 'Mystery • Drama', match: '93%', explanation: 'Twisting psychological thriller' }
+                    ]
+                };
+                
+                const movies = fallbackData[context] || fallbackData['cozy'];
+                this.displayRecommendations(movies);
+                this.updateDebug(`🔄 Using fallback recommendations for ${context}`, 'warning');
+            }
+            
+            async fetchWithRetry(url, options = {}) {
+                for (let i = 0; i <= this.maxRetries; i++) {
+                    try {
+                        const response = await fetch(url, options);
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        this.retryCount = 0; // Reset on success
+                        return response;
+                    } catch (error) {
+                        if (i === this.maxRetries) throw error;
+                        
+                        this.updateDebug(`🔄 Retry ${i + 1}/${this.maxRetries} for ${url}`, 'warning');
+                        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
+                    }
+                }
+            }
+            
+            async checkBackendConnection() {
+                try {
+                    this.updateDebug('🔍 Testing backend connection...');
+                    const response = await this.fetchWithRetry(`${this.apiBaseUrl}/movies`);
+                    const data = await response.json();
+                    
+                    if (data && data.success) {
+                        this.updateDebug(`✅ Backend connected! Found ${data.movies?.length || 0} movies`, 'success');
+                        this.showStatus('Backend connected successfully', 'success');
+                    } else {
+                        throw new Error(data.error || 'Unknown backend error');
+                    }
+                } catch (error) {
+                    this.updateDebug(`❌ Backend connection failed: ${error.message}`, 'error');
+                    this.showStatus('Backend offline - using demo mode', 'warning', 5000);
+                    this.updateDebug('💡 Make sure your Flask server is running on port 5001', 'info');
+                }
+            }
+        }
+        
+        // Initialize the enhanced application
+        let app;
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new CineMatchApp();
+        });
+    </script>
+</body>
+</html>
